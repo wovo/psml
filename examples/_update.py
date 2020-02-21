@@ -12,7 +12,11 @@ from os.path import isfile, join
 python = "c:/python38/python" 
 openscad = "C:/Program Files (x86)/openscad/openscad"
 
-header = "Each file can be run, it will  write to the output.scad file.\n\n"
+header = """
+Each file can be run, it will write to the output.scad file.
+Click on an image to get a larger image.
+
+"""
 
 def run( list ):
    print( subprocess.run( list ))
@@ -36,7 +40,7 @@ def update_file( f ):
       "--imgsize", "512,512",
       "-oimages/%s512.png" % f ])
    return (
-      "[![%s](images/%s.png)][imaqes/%s512.png]\n\n"
+      "[![%s](images/%s.png)](imaqes/%s512.png)\n\n"
       "[%s.py](%s.py)\n\n" ) % ( f, f, f, f, f )     
    
 def update( files ):
