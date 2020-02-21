@@ -40,7 +40,7 @@ def update_file( f ):
       "--imgsize", "512,512",
       "-oimages/%s512.png" % f ])
    return (
-      "[![%s](images/%s.png)](imaqes/%s512.png)\n\n"
+      "[![%s](images/%s.png)](images/%s512.png)\n\n"
       "[%s.py](%s.py)\n\n" ) % ( f, f, f, f, f )     
    
 def update( files ):
