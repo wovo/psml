@@ -15,8 +15,9 @@ def update_file( f ):
       "output.scad", 
       "--viewall", 
       "--view", "axes", 
+      "--imgsize", "256,256",
       "-oimages/%s.png" % f ])
-   return "![%s](images/%s.png)\n\n [%s](%s.py)\n\n" % ( f, f, f, f )     
+   return "![%s](images/%s.png)\n\n [%s.py](%s.py)\n\n" % ( f, f, f, f )     
    
 def update( files ):
    s = "Each file can be run, it will  write to the output.scad file.\n\n"
