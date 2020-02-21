@@ -42,4 +42,4 @@ def dice( s, r = 0 ):
          dice_text2( s, "Open", "ICT", 22, r )
    )
 
-dice( 30, 5 ).write()
+dice( 30, 3 ).write()

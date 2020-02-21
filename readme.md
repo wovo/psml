@@ -84,15 +84,16 @@ Similar libraries:
    
 ToDo list
 - simplify and check the shift parameters
-- += -= *=
+- mirror: check 0/1
 - more examples
 - more openscad primitives
 - text, extend from dice example
-- dice could be a library element
+- dice: handle rounding (shrink text), could be a library element
 - user manual
 - auto-generate images and readme.md from the examples?
 - screw bus for M screw
 - generate the Python reference
+- tests for the error handling
 
 -----------------------------------------------------------------------------      
       
