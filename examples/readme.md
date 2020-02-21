@@ -1,12 +1,8 @@
 Each file can be run, it will  write to the output.scad file.
 
-![snowman](images/snowman.png)
+![dice](images/dice.png)
 
- [snowman.py](snowman.py)
-
-![triangle](images/triangle.png)
-
- [triangle.py](triangle.py)
+ [dice.py](dice.py)
 
 ![rectangles](images/rectangles.png)
 
@@ -16,7 +12,11 @@ Each file can be run, it will  write to the output.scad file.
 
  [repeat.py](repeat.py)
 
-![dice](images/dice.png)
+![snowman](images/snowman.png)
 
- [dice.py](dice.py)
+ [snowman.py](snowman.py)
+
+![triangle](images/triangle.png)
+
+ [triangle.py](triangle.py)
 

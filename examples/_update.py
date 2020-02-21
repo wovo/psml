@@ -1,4 +1,12 @@
+"""
+This script re-creates the images and
+the readme.md file from the .py files
+found in this directory that do not start with "_".
+"""
+
 import subprocess
+from os import listdir
+from os.path import isfile, join
 
 python = "c:/python38/python" 
 openscad = "C:/Program Files (x86)/openscad/openscad"
@@ -27,12 +35,10 @@ def update( files ):
    f = open( "readme.md", "w" )
    f.write( s )
    f.close()
-      
-update([ 
-   "snowman", 
-   "triangle",
-   "rectangles",
-   "repeat",
-   "dice",
-])
+   
+files = [
+   f.replace( ".py", "" ) 
+      for f in listdir() 
+         if f.find( ".py" ) > 0 and not f.startswith( "_" ) ]   
 
+update( files )
