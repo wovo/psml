@@ -485,7 +485,25 @@ class rotate:
     def __pow__( self, minion: solid_element ) -> solid_element:   
         return solid_element( 
             ( "rotate( %s )\n" % str( self.angles ) ) +
-                _indent( str( minion ) ) )        
+                _indent( str( minion ) ) )       
+
+class mirror:
+    """mirror operator: rotate an object in one or more planes
+    
+    (This is the OpenSCAD mirror operation.)
+    """
+    
+    def __init__( self, x, y = None, z = None ):    
+        if y != None:
+           x = shift( x, y, z )
+        self.angles = x
+
+    def __pow__( self, minion: solid_element ) -> solid_element:   
+        return solid_element( 
+            ( "mirror( %s )\n" % str( self.angles ) ) +
+                _indent( str( minion ) ) )       
+
+                
                     
      
 #============================================================================

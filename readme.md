@@ -84,9 +84,14 @@ Similar libraries:
    
 ToDo list
 - simplify and check the shift parameters
+- += -= *=
 - more examples
+- more openscad primitives
+- text, extend from dice example
+- dice could be a library element
 - user manual
 - auto-generate images and readme.md from the examples?
+- screw bus for M screw
 - generate the Python reference
 
 -----------------------------------------------------------------------------      
