@@ -8,8 +8,11 @@ import subprocess
 from os import listdir
 from os.path import isfile, join
 
+# Yes, I use Windows. Sorry.
 python = "c:/python38/python" 
 openscad = "C:/Program Files (x86)/openscad/openscad"
+
+header = "Each file can be run, it will  write to the output.scad file.\n\n"
 
 def run( list ):
    print( subprocess.run( list ))
@@ -23,12 +26,21 @@ def update_file( f ):
       "output.scad", 
       "--viewall", 
       "--view", "axes", 
-      "--imgsize", "256,256",
+      "--imgsize", "128,128",
       "-oimages/%s.png" % f ])
-   return "![%s](images/%s.png)\n\n [%s.py](%s.py)\n\n" % ( f, f, f, f )     
+   run([ 
+      openscad, 
+      "output.scad", 
+      "--viewall", 
+      "--view", "axes", 
+      "--imgsize", "512,512",
+      "-oimages/%s512.png" % f ])
+   return (
+      "[![%s](images/%s.png)][imaqes/%s512.png]\n\n"
+      "[%s.py](%s.py)\n\n" ) % ( f, f, f, f, f )     
    
 def update( files ):
-   s = "Each file can be run, it will  write to the output.scad file.\n\n"
+   s = header
    for f in files:
       print( "updating %s" % f )
       s += update_file( f )   
