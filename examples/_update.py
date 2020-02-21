@@ -16,14 +16,14 @@ def update_file( f ):
       "--viewall", 
       "--view", "axes", 
       "-oimages/%s.png" % f ])
-   return "![%s](images/%s.png)\n [%s](%s.py)\n\n" % ( f, f, f, f )     
+   return "![%s](images/%s.png)\n\n [%s](%s.py)\n\n" % ( f, f, f, f )     
    
 def update( files ):
    s = "Each file can be run, it will  write to the output.scad file.\n\n"
    for f in files:
       print( "updating %s" % f )
       s += update_file( f )   
-   f = open( "reame.md", "w" )
+   f = open( "readme.md", "w" )
    f.write( s )
    f.close()
       
