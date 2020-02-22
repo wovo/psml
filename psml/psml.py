@@ -2,15 +2,11 @@
 """
 PSML
 
-Python Solid Modeling Library for generating OpenSCAD source
+Python Solid Modeling Library:
+a library for generating OpenSCAD source
 
 home: https://www.github.com/wovo/psml
 
-ToDo
-- simplify shift arguments
-- tests??
-- readme.md
-- manual
 """
 #============================================================================
 
@@ -28,12 +24,16 @@ from __future__ import annotations
 number_of_circle_facets = 32
 number_of_sphere_facets = 32
 
-def draft( n = 10 ):
-    """set the accuracy of circles, spheres and fonts
+def facets( n ):
+    """set the accuracy (number of facets) of circles, spheres and fonts
     
-    The default is a compromise between speed and accuracy.
+    The default setting (32) is a compromise between speed and accuracy.
+    
     For quick rendering of complex designs 
-    the default value of 10 might be a good choice.
+    a lower value (10, or even 5) might be appropriate.
+    
+    This function has effect on solid elements that are created
+    after its call, so better call it before you create any elements.
     """
     
     global number_of_circle_facets
@@ -48,6 +48,29 @@ def _indent( txt: string ) -> string:
         lambda s: "" if s.strip() == "" else "   " + s + "\n",
             txt.split( "\n" )
         ))
+
+def _apply( 
+    a : solid_element, 
+    b : solid_element, 
+    s1 : string,
+    s2 : string
+) -> solid_element:
+    if b == None: 
+       b = solid_element( "", "" )
+       if a == None:
+          a = b
+    if s2 == None:
+       s2 = s1    
+    return solid_element(
+        s1 + "{\n" + _indent( 
+            a._positive() + "\n" + 
+            b._positive() + "\n" ) +
+        "}",
+        s2 + "{\n" + _indent( 
+            a._negative() + "\n" + 
+            b._negative() + "\n" ) +
+        "}",
+    )             
     
     
 #============================================================================
@@ -60,13 +83,33 @@ class solid_element:
     """2D or 3D solid element
     """
     
-    def __init__( self, txt : string ):  
-        """a (simple) solid element
+    def __init__( self, positive : string, negative : string ):  
+        """a simple solid element
         
         This constructor creates a solid element that has a 
-        fixed OpenSCAD representation.
+        fixed textual representation.
         """
-        self.txt = txt
+        self._positive_text = positive
+        self._negative_text = negative
+        
+    def _positive( self ):
+        """the OpenSCAD representation of the positive parts
+        
+        This method returns the OpenSCAD representation of the 
+        positive parts of the solid element.
+        """
+        return self._merge()._positive_text
+
+    def _negative( self ):
+        """the OpenSCAD representation of the negative parts
+        
+        This method returns the OpenSCAD representation of the 
+        negative parts of the solid element.
+        """
+        return self._merge()._negative_text
+        
+    def _merge( self ) -> element_list:
+       return self    
 
     def __str__( self ) -> string:       
         """the OpenSCAD representation
@@ -74,9 +117,9 @@ class solid_element:
         This method returns the OpenSCAD representation of the 
         solid element.
         """
-        return self.txt    
+        return ( self - solid_element( self._negative(), "" ))._positive()
         
-    def write( self, file_name = "output.scad"):
+    def write( self, file_name = "output.scad" ):
         """write the OpenSCAD representation to the specified file
         
         This function prints the OpenSCAD representation of the 
@@ -109,24 +152,14 @@ class solid_element:
         
         This maps directly to an OpenSCAD difference().
         """
-        if rhs == None: return self
-        return solid_element( 
-            "difference(){\n" + _indent( 
-                str( self ) + "\n" + 
-                str( rhs ) + "\n" ) +
-            "}" )
+        return _apply( self, rhs, "difference()", "union()" )
               
     def __mul__( self, rhs: solid_element ) -> solid_element:
         """intersect two solid elements
         
         This maps directly to an OpenSCAD intersection().        
         """
-        if rhs == None: return self
-        return solid_element( 
-            "intersection(){\n" + _indent( 
-                str( self ) + "\n" + 
-                str( rhs ) + "\n" ) +
-            "}" )        
+        return _apply( self, rhs, "intersection()", "union()" )       
     
 
 class _solid_element_list( solid_element ):
@@ -158,17 +191,15 @@ class _solid_element_list( solid_element ):
        else:   
           self.list.append( x )       
        
-    def __str__( self ) -> string:    
-        """the OpenSCAD representation
-        
-        This method returns the OpenSCAD representation of the 
-        _solid_element_list, which is the union() of all solid elements
-        in the list.
-        """
-        return ( 
+    def _merge( self ) -> solid_element:    
+        return solid_element( 
             "union(){\n" + 
-               _indent( "".join( str( x ) for x in self.list )) +
-            "}" )       
+               _indent( "".join( x._positive() for x in self.list )) +
+            "}",       
+            "union(){\n" + 
+               _indent( "".join( x._negative() for x in self.list )) +
+            "}"   
+        )
        
     
 #============================================================================
@@ -276,12 +307,12 @@ class shift:
         else:
             return "[ %f, %f, %f ]" % ( self.x, self.y, self.z )
             
-    def __pow__( self, m : solid_element ) -> solid_element:
+    def __pow__( self, minion : solid_element ) -> solid_element:
         """apply the shift to a solid element
         """        
-        return solid_element(
-           ( "translate( %s )\n" % str( self ) ) +
-               _indent( str( m ) ) )
+        return _apply( 
+           minion, None,
+           "translate( %s )" % str( self ), None )
       
 def dup2( v ):
    return shift( v, v )
@@ -349,7 +380,7 @@ def rectangle( x, y = 0, rounding = 0 ):
        s = shift( x, y )
     
     if rounding == 0:
-        return solid_element( "square( %s );" % str( s ))    
+        return solid_element( "square( %s );" % str( s ), "" )    
         
     else:
         x, y, r = s.x, s.y, rounding
@@ -378,7 +409,7 @@ def box( x, y = 0, z = 0, rounding = 0 ):
        s = shift( x, y, z )
     
     if rounding == 0:
-        return solid_element( "cube( %s );" % str( s ))
+        return solid_element( "cube( %s );" % str( s ), "" )
         
     else:     
         x, y, z, r = s.x, s.y, s.z, rounding
@@ -395,65 +426,56 @@ def box( x, y = 0, z = 0, rounding = 0 ):
                 extrude( x - 2 * r ) ** rectangle ( z, y, r )
         )       
            
-class circle( solid_element ): 
+def circle( r, f = None ):
     """circle solid element
     
-    (This is the OpenSCAD circle.)
-    """
-    
-    def __init__( self, r, f = None ):
-        """create a circle from its radius
+    Create a circle from its radius.
         
-        Optionally, the number of circle facets can be specified.
-        The default is the global variable number_of_circle_facets.           
-        """    
+    Optionally, the number of circle facets can be specified.
+    The default is the global variable number_of_circle_facets.           
+    """    
         
-        # number_of_circle_facets can't be the default value because
-        # that would not reflect a change of number_of_circle_facets
-        if f == None: f = number_of_circle_facets    
+    # number_of_circle_facets can't be the default value because
+    # that would not reflect a change of number_of_circle_facets
+    if f == None: f = number_of_circle_facets    
         
-        solid_element.__init__( self, 
-            "circle( r=%f, $fn=%d );" % ( r, f ))          
+    return solid_element( 
+        "circle( r=%f, $fn=%d );" % ( r, f ), "" ) 
      
-class cylinder( solid_element ): 
+def cylinder( r, h, f = None ):
     """cylinder solid element
     
-    (This is the OpenSCAD cylinder.)
-    """
-    
-    def __init__( self, r, h, f = None ):
-        """create a cylinder from its radius and height
+    Create a cylinder from its radius and height
         
-        Optionally, the number of circle facets can be specified.
-        The default is the global variable number_of_circle_facets.
-        """   
+    Optionally, the number of circle facets can be specified.
+    The default is the global variable number_of_circle_facets.
+    """   
         
-        # see remark in circle
-        if f == None: f = number_of_circle_facets  
+    # see remark in circle
+    if f == None: f = number_of_circle_facets  
         
-        solid_element.__init__( self, 
-            "cylinder( r=%f, h=%f, $fn=%d );" % ( r, h, f ))      
+    return solid_element( 
+        "cylinder( r=%f, h=%f, $fn=%d );" % ( r, h, f ), "" )
 
-class sphere( solid_element ): 
+def sphere( r, f = None ):
     """sphere solid element
     
-    (This is the OpenSCAD sphere.)
-    """
-    
-    def __init__( self, r, f = None ):
-        """create a sphere from its radius and height
+    Create a sphere from its radius and height
         
-        Optionally, the number of sphere facets can be specified.
-        The default is the global variable number_of_sphere_facets.
-        """    
-        if f == None: f = number_of_sphere_facets
-        solid_element.__init__( self, 
-            "sphere( r=%f, $fn=%d );" % ( r, f ))             
+    Optionally, the number of sphere facets can be specified.
+    The default is the global variable number_of_sphere_facets.
+    """    
+    
+    # see remark in circle    
+    if f == None: f = number_of_sphere_facets
+    
+    return solid_element(
+        "sphere( r=%f, $fn=%d );" % ( r, f ), "" )             
 
 
 #============================================================================
 # 
-# OpenSCAD operators
+# OpenSCAD modifier
 #
 #============================================================================
       
@@ -467,9 +489,9 @@ class extrude:
         self.z = z   
          
     def __pow__( self, minion: solid_element ) -> solid_element:
-        return solid_element( 
-            ( "linear_extrude( %f )\n" % self.z ) +
-                _indent( str( minion ) ) )
+        return _apply( 
+           minion, None, 
+           "linear_extrude( %f )\n" % self.z, None )
         
 class rotate:
     """rotate operator: rotate an object around one or more axises
@@ -483,12 +505,12 @@ class rotate:
         self.angles = x
 
     def __pow__( self, minion: solid_element ) -> solid_element:   
-        return solid_element( 
-            ( "rotate( %s )\n" % str( self.angles ) ) +
-                _indent( str( minion ) ) )       
+        return _apply( 
+            minion, None,
+            "rotate( %s )" % str( self.angles ), None )     
 
 class mirror:
-    """mirror operator: rotate an object in one or more planes
+    """mirror operator: mirror an object in one or more planes
     
     (This is the OpenSCAD mirror operation.)
     """
@@ -499,11 +521,9 @@ class mirror:
         self.angles = x
 
     def __pow__( self, minion: solid_element ) -> solid_element:   
-        return solid_element( 
-            ( "mirror( %s )\n" % str( self.angles ) ) +
-                _indent( str( minion ) ) )       
-
-                
+        return _apply( 
+           minion, None,
+           "mirror( %s )" % str( self.angles ), None )              
                     
      
 #============================================================================
@@ -512,8 +532,34 @@ class mirror:
 #
 #============================================================================     
      
+class _negative:
+    """makes its subject a dominant negative
+    
+    This manipulator makes its subject a dominant negative:
+    something that will not be filled.
+    """
+
+    def __pow__( self, subject: solid_element ) -> solid_element:   
+       return solid_element( "", str( subject ) )
+       
+negative = _negative()       
+           
+class _positive:
+    """makes its subject a dominant negative
+    
+    This manipulator makes its subject a dominant negative:
+    something that will not be filled.
+    """
+
+    def __pow__( self, subject: solid_element ) -> solid_element:   
+       return solid_element( str( subject ), "" )
+       
+positive = _positive()   
+
+identity = shift( 0, 0, 0 )
+           
 class repeat2:
-    """"repeat at two positions
+    """repeat at two positions
     
     This manipulator repeats its minion twice: once at its original
     location, and once at the indicated shift.

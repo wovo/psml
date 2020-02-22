@@ -1,6 +1,6 @@
 # PSML : Python Solid Modeling Library
 
-version: 0.01 - 2020-02-21
+version: 0.01 - 2020-02-22
 
 This is a Python library (Python 3 required) for writing
 3D models that can be rendered and processed by 
@@ -10,12 +10,13 @@ OpenSCAD is a great tool for rendering a 3D model and generating
 an stl file from it for 3D printing.
 The OpenSCAD built-in language is effective for simple projects
 and I like its functional-programming feeling,
-but I missed the general-purpose features of a true programming language,
-so why not use Python to create OpenSCAD files?
+but working on more complex projects I missed the 
+general-purpose features of a true programming language.
+So why not use Python to create OpenSCAD files?
 Apparently I was not the first with this idea, but I found the
 existing libraries unsatisfactory, at least to me.
-I guess that says more about me than about those libraries.
-So as all stubborn programmers do, I created yet another one.
+(That might say more about me than about those libraries.)
+So as stubborn programmers do, I created yet another one.
 
 ~~~Python
 from psml import *
@@ -27,10 +28,11 @@ from psml import *
 
 Sphere and cylinder are 3D solids. 
 Shift is a 3D operator that shifts its subject in the specified
-(z, y and z) direction. 
-Rotate rotates its subject by the specified angles (in degrees) 
-around the x, y and z axises.
-The \*\* (power operator) applies a shift or rotate to a solid.
+(z, y, z) direction. 
+Rotate rotates its subject by the specified angles 
+(in degrees, around the x, y and z axes).
+The \*\* (Python power operator) applies a modifier 
+like shift or rotate to a solid.
 The + operator combines solids.
 Finally the write method writes the corresponding OpenSCAD code
 to the output.scad file.
@@ -39,8 +41,8 @@ When this file is opened in OpenSCAD it renders a simple snowman.
 ![snowman](examples/images/snowman.png)
 
 The power of a general purpose language, in this case Python's
-List comprehension and reduce, can be used to create seemingly complex
-solids with just a few lines.
+list comprehension and reduce, can be used to create seemingly complex
+models with just a few lines.
  
 ~~~Python
 from psml import *
@@ -66,15 +68,15 @@ import sys
 sys.path.append( "../psml" )
 ~~~
 
-Workflow is
-- edit the Python source 
-- run it from a command line
+My workflow is
+- edit the Python sources
+- run it (I prefer the command line)
 - have OpenSCAD with the result file open, 
 enable Design => Automatic Reload and Preview.
    
 This library is very much work-in-progress. 
-Feedback is welcome. 
-Constructive feedback even more.
+Feedback is welcome,
+constructive feedback even more.
 
 Similar libraries:
    - [SolidPython](https://github.com/SolidCode/SolidPython)
@@ -91,8 +93,11 @@ ToDo list
 - dice: handle rounding (shrink text), could be a library element
 - user manual
 - screw bus for M screw
-- generate the Python reference
+- generate the Python reference, https://www.sphinx-doc.org/en/master/
 - tests for the error handling
+- pip installer
+- extract example text and put it in the readme.md
+- None is acceptable 
 
 -----------------------------------------------------------------------------      
       

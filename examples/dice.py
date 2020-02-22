@@ -7,7 +7,7 @@ class text( solid_element ):
    def __init__( self, t, s ):
       solid_element.__init__( self, 
          'text( "%s", %f, halign = "center", valign = "center" );'
-            % ( t, s )
+            % ( t, s ), ""
       )   
 
 def dice_text1( n, t, f, r ):

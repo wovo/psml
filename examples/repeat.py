@@ -21,4 +21,9 @@ x,y = 0, 15
 add( repeat4( 5, 7 ) ** box( 2, 3, 5 ) )
 add( repeat4( shift( 5, 7 )) ** box( 2, 3, 5 ) )
 
+x,y = 0, 35
+
+add( repeat8( 5, 12, 3 ) ** sphere( 2 ) )
+add( repeat8( shift( 5, 12, 3 )) ** sphere( 2 ) )
+
 model.write()
