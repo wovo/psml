@@ -2,23 +2,19 @@
 Each file can be run, it will write to the output.scad file.
 Click on an image to get a larger image.
 
-[![dice](images/dice.png)](images/dice512.png)
+[![b](images/b128.png)](images/b512.png)
 
-[dice.py](dice.py)
+[b.py](b.py)
 
-[![rectangles](images/rectangles.png)](images/rectangles512.png)
+[![o](images/o128.png)](images/o512.png)
 
-[rectangles.py](rectangles.py)
+[o.py](o.py)
 
-[![repeat](images/repeat.png)](images/repeat512.png)
+[![x](images/x128.png)](images/x512.png)
 
-[repeat.py](repeat.py)
+[x.py](x.py)
 
-[![snowman](images/snowman.png)](images/snowman512.png)
+[![1](images/1128.png)](images/1512.png)
 
-[snowman.py](snowman.py)
-
-[![triangle](images/triangle.png)](images/triangle512.png)
-
-[triangle.py](triangle.py)
+[1.py](1.py)
 

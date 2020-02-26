@@ -3,18 +3,11 @@ sys.path.append( "../psml" )
 
 from psml import *
 
-class text( solid_element ):
-   def __init__( self, t, s ):
-      solid_element.__init__( self, 
-         'text( "%s", %f, halign = "center", valign = "center" );'
-            % ( t, s ), ""
-      )   
-
 def dice_text1( n, t, f, r ):
    return (
       shift( n / 2.0, n / 2.0, 0 ) ** 
          extrude( 1 ) **
-            text( t, ( ( n - r ) * f ) / 100 ))
+            text( t, ( ( n - r ) * f ) / 100 ), halign = "center", valign = "center")
 
 def dice_text2( n, t1, t2, f, r ):
    return (  

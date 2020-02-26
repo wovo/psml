@@ -27,22 +27,23 @@ from psml import *
 ~~~
 
 Sphere and cylinder are 3D solids. 
-Shift is a 3D operator that shifts its subject in the specified
+Shift is a 3D filter that shifts its subject in the specified
 (z, y, z) direction. 
-Rotate rotates its subject by the specified angles 
+Rotate is a filter that rotates its subject by the specified angles 
 (in degrees, around the x, y and z axes).
-The \*\* (Python power operator) applies a modifier 
-like shift or rotate to a solid.
+The \*\* (Python power operator) applies a filter 
+like shift or rotate to a solid, yielding a modified solid.
 The + operator combines solids.
 Finally the write method writes the corresponding OpenSCAD code
 to the output.scad file.
-When this file is opened in OpenSCAD it renders a simple snowman.
+When this file is opened in OpenSCAD, it shows a simple snowman.
 
 ![snowman](examples/images/snowman.png)
 
 The power of a general purpose language, in this case Python's
 list comprehension and reduce, can be used to create seemingly complex
 models with just a few lines.
+(A pity that full rendering of this model takes quite some time!)
  
 ~~~Python
 from psml import *
@@ -68,11 +69,20 @@ import sys
 sys.path.append( "../psml" )
 ~~~
 
+Feature summary ([sphinx documentation](./html/index.html)):
+   - basic solids: rectangle, box, circle, cylinder, sphere
+   - export to OpenSCAD: write()
+   - operators: + - *
+   - basic filters: shift, rotate, mirror, extrude
+   - shift arithmetic
+   - more filters: repeat2, repeat4, repeat8
+   - first-class voids: negative, positive
+
 My workflow is
-- edit the Python sources
-- run it (I prefer the command line)
-- have OpenSCAD with the result file open, 
-enable Design => Automatic Reload and Preview.
+   - edit the Python sources
+   - run it (I prefer the command line)
+   - have OpenSCAD with the result file open, 
+     enable Design => Automatic Reload and Preview.
    
 This library is very much work-in-progress. 
 Feedback is welcome,
@@ -91,13 +101,33 @@ ToDo list
 - more openscad primitives
 - text, extend from dice example
 - dice: handle rounding (shrink text), could be a library element
-- user manual
-- screw bus for M screw
-- generate the Python reference, https://www.sphinx-doc.org/en/master/
 - tests for the error handling
 - pip installer
 - extract example text and put it in the readme.md
 - None is acceptable 
+- update examples check file times??
+- longer parameter names
+- virtual box that can be asked? with wall-thickness?
+- split should be an operator
+- better name for operator / filter -> manipulator
+- move project box to work
+- text parameters
+- https://medium.com/@richdayandnight/a-simple-tutorial-on-how-to-document-your-python-project-using-sphinx-and-rinohtype-177c22a15b5b
+- scale
+- resize
+- other extrudes
+- color?
+- multimatrix?
+- minkowski?
+- hull?
+- rotate_extrude?
+- polyhedron?
+- allow negative extrusion?
+
+- vector init, operators
+- make rotate etc. functions, supply a lambda
+- make rectangle etc. show derived from -> shape (or function!)
+
 
 -----------------------------------------------------------------------------      
       

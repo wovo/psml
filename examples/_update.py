@@ -5,6 +5,7 @@ found in this directory that do not start with "_".
 """
 
 import subprocess
+import sys
 from os import listdir
 from os.path import isfile, join
 
@@ -19,9 +20,11 @@ Click on an image to get a larger image.
 """
 
 def run( list ):
-   print( subprocess.run( list ))
+   s = subprocess.run( list )
+   if 0: print( s )
 
 def update_file( f ):
+   print( "updating %s" % f )
    run([ 
       python, 
       f + ".py" ])
@@ -30,31 +33,34 @@ def update_file( f ):
       "output.scad", 
       "--viewall", 
       "--view", "axes", 
+      "--render",
       "--imgsize", "128,128",
-      "-oimages/%s.png" % f ])
+      "-oimages/%s_128.png" % f ])
    run([ 
       openscad, 
       "output.scad", 
       "--viewall", 
       "--view", "axes", 
+      "--render", 
       "--imgsize", "512,512",
-      "-oimages/%s512.png" % f ])
+      "-oimages/%s_512.png" % f ])
    return (
-      "[![%s](images/%s.png)](images/%s512.png)\n\n"
+      "[![%s](images/%s_128.png)](images/%s_512.png)\n\n"
       "[%s.py](%s.py)\n\n" ) % ( f, f, f, f, f )     
    
 def update( files ):
    s = header
    for f in files:
-      print( "updating %s" % f )
       s += update_file( f )   
    f = open( "readme.md", "w" )
    f.write( s )
-   f.close()
-   
-files = [
-   f.replace( ".py", "" ) 
-      for f in listdir() 
-         if f.find( ".py" ) > 0 and not f.startswith( "_" ) ]   
+   f.close()   
 
-update( files )
+if len( sys.argv ) == 1:
+   files = [
+      f.replace( ".py", "" ) 
+         for f in listdir() 
+            if f.find( ".py" ) > 0 and not f.startswith( "_" ) ]
+   update( files )
+else:
+   update_file( sys.argv[ 1 ] )   

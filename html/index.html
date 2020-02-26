@@ -1,0 +1,562 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>PSML - Python Solid Modeling Library &#8212; PSML  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="psml-python-solid-modeling-library">
+<h1>PSML - Python Solid Modeling Library<a class="headerlink" href="#psml-python-solid-modeling-library" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-psml"></span><p>a library for generating <a class="reference external" href="https://www.openscad.org/">OpenSCAD</a> 3D models</p>
+<p><a class="reference external" href="https://www.github.com/wovo/psml">https://www.github.com/wovo/psml</a></p>
+<p>(c) Wouter van Ooijen (<a class="reference external" href="mailto:wouter&#46;vanooijen&#37;&#52;&#48;hu&#46;nl">wouter<span>&#46;</span>vanooijen<span>&#64;</span>hu<span>&#46;</span>nl</a>)</p>
+<p>Distributed under the Boost Software License, Version 1.0.</p>
+<hr class="docutils" />
+<p>This is a Python library (Python 3 required) for writing
+3D model code that can be rendered and processed by <a class="reference external" href="https://www.openscad.org/">OpenSCAD</a>.
+This documentation is meant to be usable on its own,
+without having to read the OpenSCAD documentation.
+Hence it is worded as if the PSML library contains all the functionality,
+while in fact it is in most cases just a thin layer
+on top of the OpenSCAD language.</p>
+<p>The library has a vector class.
+A vector holds x, y and (optional) z numeric values.
+A vector is used to specify (in 2D or 3D) a size,
+a location or displacement, and sometimes just 2 or 3 values
+that are conveniently grouped together.
+A vector can be created from two or three values.
+Two vectors can be added or subtracted.
+A vector can multiplied with or divided by a numeric value.
+When a function requires a vector, it can in most
+cases be specified either by a vector value, or as 2 or 3
+individual numeric parameters.</p>
+<p>This library creates and manipulates 3D solid objects.
+The image below shows the basic solid objects:
+box, cylinder, cone, and sphere.</p>
+<div class="figure align-default">
+<img alt="_images/intro_bccs_128.png" src="_images/intro_bccs_128.png" />
+</div>
+<p>Basic flat (2D) objects are rectangle, circle, polygon, and text,
+as shown in the next image.</p>
+<div class="figure align-default">
+<img alt="_images/intro_rcpt_128.png" src="_images/intro_rcpt_128.png" />
+</div>
+<p>A flat object can be extended into a solid object
+by extruding it (in the z direction), &lt;&gt;</p>
+<div class="figure align-default">
+<img alt="../examples/images/intro_extrude_128.png" src="../examples/images/intro_extrude_128.png" />
+</div>
+<p>Objects and be added, subtracted and intersected
+with the operators +, - and *.</p>
+<div class="figure align-default">
+<img alt="_images/intro_asi_128.png" src="_images/intro_asi_128.png" />
+</div>
+<p>Manipulators can be applied to an object with the ** (power) operator.
+Basic manipulators are vector, rotate, mirror, scale and resize.</p>
+<div class="figure align-default">
+<img alt="_images/intro_vrm_128.png" src="_images/intro_vrm_128.png" />
+</div>
+<p>The repeat2, repeat4 and repeat8 manipulators repeat their subject.
+Repeat2 does this at the original location,
+and shifted by the specified vector.
+Repeat4 does this at the 4 corners of the rectangle
+specified by the vector.
+Repeat8 does this at the 8 corners of the box
+specified by the vector.</p>
+<div class="figure align-default">
+<img alt="_images/intro_repeat1_128.png" src="_images/intro_repeat1_128.png" />
+</div>
+<p>The negative manipulator creates a dominant emptiness from its subject.
+The image below shows at the left the addition of two normal pipes.
+The result is not a usable pipe crossing because the walls of each
+pipe will block the other pipe.
+In the middle it shows the addition of two pipes of which the empty
+interior is dominant. This produces a ‘successful’ pipe crossing.
+But this also removes part of the vertical axle.
+At the right the crossing was first made positive, which
+reduces the dominant emptiness to an normal, and then the
+vertical axle was added.</p>
+<div class="figure align-default">
+<img alt="_images/intro_negatives1_128.png" src="_images/intro_negatives1_128.png" />
+</div>
+<hr class="docutils" />
+<dl class="function">
+<dt id="psml.box">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">box</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y: Optional[float] = None</em>, <em class="sig-param">z: Optional[float] = None</em>, <em class="sig-param">rounding=0</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.box" title="Permalink to this definition">¶</a></dt>
+<dd><p>box shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – x size, or a vector which specifies all 3 sizes</p></li>
+<li><p><strong>y</strong> – y size (omit when x is a vector)</p></li>
+<li><p><strong>z</strong> – z size (omit when x is a vector)</p></li>
+<li><p><strong>rounding</strong> – rounding radius (default: no rounding)</p></li>
+</ul>
+</dd>
+</dl>
+<p>The size of the box can be specified either by
+three values x, y and z, or by a vector.
+The box has its lower-left corner at the origin.
+The rounding specifies the radius of the rounding
+at the corners and edges.
+The default rounding is 0, which yields sharp boundaries.</p>
+<div class="figure align-default">
+<img alt="_images/box1_128.png" src="_images/box1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">box</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span>
+<span class="c1"># or box( vector( 20, 30, 10 ), 0 )</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="_images/box2_128.png" src="_images/box2_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">box</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span> <span class="p">)</span>
+<span class="c1"># or box( vector( 20, 30, 10 ), 2 )</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.circle">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">circle</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">facets=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>circle shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> – the radius of the circle</p></li>
+<li><p><strong>facets</strong> – number of circle facets</p></li>
+</ul>
+</dd>
+</dl>
+<p>The size of the circle is specified by its radius.
+The circle is in the x-y plane, with its center at the origin.
+Optionally, the number of circle facets can be specified.
+The default is the global variable number_of_circle_facets.</p>
+<div class="figure align-default">
+<img alt="_images/circle1_128.png" src="_images/circle1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="_images/circle2_128.png" src="_images/circle2_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="n">facets</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.cone">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cone</code><span class="sig-paren">(</span><em class="sig-param">radius1</em>, <em class="sig-param">radius2=None</em>, <em class="sig-param">height=None</em>, <em class="sig-param">facets=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.cone" title="Permalink to this definition">¶</a></dt>
+<dd><p>cone shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius1</strong> – the radius of the cone at its bottom,
+or a vector that specifies the two radiuses and the height</p></li>
+<li><p><strong>radius2</strong> – the radius of the cone at its top</p></li>
+<li><p><strong>height</strong> – the height of the cone</p></li>
+<li><p><strong>facets</strong> – number of circle facets</p></li>
+</ul>
+</dd>
+</dl>
+<p>The size of the cone is specified by its the radius
+at its base, its radius at its top, and its height.</p>
+<p>Optionally, the number of circle facets can be specified.
+The default is the global variable number_of_circle_facets.</p>
+<div class="figure align-default">
+<img alt="_images/cone1_128.png" src="_images/cone1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.cylinder">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cylinder</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">height=None</em>, <em class="sig-param">facets=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.cylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>cylinder shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> – the radius of the cylinder,
+or a vector that specifies the radius and the height</p></li>
+<li><p><strong>height</strong> – the height of the cylinder</p></li>
+<li><p><strong>facets</strong> – number of circle facets</p></li>
+</ul>
+</dd>
+</dl>
+<p>The size of the cylinder is specified by its the radius
+at its base, and its height.</p>
+<p>Optionally, the number of circle facets can be specified.
+The default is the global variable number_of_circle_facets.</p>
+<div class="figure align-default">
+<img alt="_images/cylinder1_128.png" src="_images/cylinder1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.dup2">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">dup2</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.dup2" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a vector with x and y set to v</p>
+<p>bla bla</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.dup3">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">dup3</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.dup3" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a vector with x, y and z set to v</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="psml.extrude">
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">extrude</code><span class="sig-paren">(</span><em class="sig-param">z</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.extrude" title="Permalink to this definition">¶</a></dt>
+<dd><p>extrude operator: extend a 2d object in the z direction</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.facets">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">facets</code><span class="sig-paren">(</span><em class="sig-param">numer_of_facts: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#psml.facets" title="Permalink to this definition">¶</a></dt>
+<dd><p>accuracy (number of facets) of circles, spheres and fonts</p>
+<p>The default setting (32) is a compromise between speed and accuracy.</p>
+<p>For quick rendering of complex designs
+a lower value (10, or even 5) might be appropriate.</p>
+<p>This function has effect on shapes that are created
+after its call, so better call it before you create any elements.</p>
+<div class="figure align-default">
+<img alt="_images/facets1_128.png" src="_images/facets1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="_images/facets2_128.png" src="_images/facets2_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">facets</span><span class="p">(</span> <span class="mi">9</span> <span class="p">)</span>
+<span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.hollow_box">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">hollow_box</code><span class="sig-paren">(</span><em class="sig-param">size: psml.vector</em>, <em class="sig-param">walls</em>, <em class="sig-param">rounding=0</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.hollow_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>a hollow box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> – size of the box (x, y, z )</p></li>
+<li><p><strong>walls</strong> – wall thickness</p></li>
+<li><p><strong>rounding</strong> – rounding diameter (default: no rounding)</p></li>
+</ul>
+</dd>
+</dl>
+<p>This is a hollow project enclosure box,
+Use screw_and_nut_column() to place screw holes and recesses.
+Use split() to separate it into a top and a bottom part.
+(Or use project_enclosure() which does these things for you.)</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="psml.m_screw">
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">m_screw</code><span class="sig-paren">(</span><em class="sig-param">diameter</em>, <em class="sig-param">thread</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.m_screw" title="Permalink to this definition">¶</a></dt>
+<dd><p>a metric (m3 etc.) screw</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="psml.mirror">
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">mirror</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">z=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.mirror" title="Permalink to this definition">¶</a></dt>
+<dd><p>mirror operator: mirror an object in one or more planes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.polygon">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">polygon</code><span class="sig-paren">(</span><em class="sig-param">points</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>polygon shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>points</strong> – a list of 2d vectors or value pairs</p>
+</dd>
+</dl>
+<p>A polygon is defined by the list of its edge points.
+Each edge point can be specified by either a
+vector or a pair of values.</p>
+<div class="figure align-default">
+<img alt="../examples/images/polygon_128.png" src="../examples/images/polygon_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">polygon</span><span class="p">(</span> <span class="p">[</span>
+    <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="p">],</span>
+    <span class="p">[</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">]</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.project_enclosure">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">project_enclosure</code><span class="sig-paren">(</span><em class="sig-param">size</em>, <em class="sig-param">walls</em>, <em class="sig-param">rounding=0</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.project_enclosure" title="Permalink to this definition">¶</a></dt>
+<dd><p>a simple 2-part project enclosure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> – outer size of the enclosure (x, y, z )</p></li>
+<li><p><strong>walls</strong> – wall thickness</p></li>
+<li><p><strong>rounding</strong> – rounding diameter (default: no rounding)</p></li>
+</ul>
+</dd>
+</dl>
+<p>This is a simple 2-part project enclosure box.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.rectangle">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">rectangle</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">rounding=0</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>rectangle shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – x size, or a vector which specifies both sizes</p></li>
+<li><p><strong>y</strong> – y size (omit when x is a vector)</p></li>
+<li><p><strong>rounding</strong> – rounding radius (default: no rounding)</p></li>
+</ul>
+</dd>
+</dl>
+<p>The size of the rectangle can be specified either by
+two values x and y, or by a vector.
+The rectangle has its lower-left corner at the origin.
+The rounding specifies the radius of the rounding
+at the corners and edges.
+The default rounding is 0, which yields sharp boundaries.</p>
+<div class="figure align-default">
+<img alt="_images/rectangle1_128.png" src="_images/rectangle1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rectangle</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span>
+<span class="c1"># or rectangle( vector( 20, 30 ), rounding = 0 )</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<img alt="_images/rectangle2_128.png" src="_images/rectangle2_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rectangle</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span> <span class="p">)</span>
+<span class="c1"># or rectangle( vector( 20, 30 ), rounding = 3 )</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="psml.repeat2">
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">repeat2</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">z=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.repeat2" title="Permalink to this definition">¶</a></dt>
+<dd><p>repeat at two positions</p>
+<p>This manipulator repeats its subject twice: once at its original
+location, and once at the indicated vector.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="psml.rotate">
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">z=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>rotate operator: rotate an object around one or more axises</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="psml.scale">
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">z=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>resize operator: resize an object</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.screw_and_nut_column">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">screw_and_nut_column</code><span class="sig-paren">(</span><em class="sig-param">height</em>, <em class="sig-param">screw: psml.m_screw</em>, <em class="sig-param">wall=1</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.screw_and_nut_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>a screw and nut column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> – height of the column</p></li>
+<li><p><strong>srew</strong> – screw (specifies diameter and thread lenghth)</p></li>
+<li><p><strong>wall</strong> – wall thickness (default 1mm)</p></li>
+</ul>
+</dd>
+</dl>
+<p>This is a vertical screw-and-nut column for keeping two parts
+of an enclosure together with a flat screw and a hex nut.
+It is assumed to be spliced into the top and bottom parts.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="psml.shape">
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">shape</code><span class="sig-paren">(</span><em class="sig-param">positive: string</em>, <em class="sig-param">negative: string = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>2D or 3D shape</p>
+<p>Shapes can be added, subtracted or intersected by using the
++, - or * operators.</p>
+<dl class="method">
+<dt id="psml.shape.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">file_name='output.scad'</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.shape.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>write the shape to the specified file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_name</strong> – name of the file</p>
+</dd>
+</dl>
+<p>This function prints the OpenSCAD representation of the
+shape to the indicated file (default: output.scad).
+That file can be opened in OpenSCAD
+for visualization or export as to a .stl file.</p>
+<p>If the file_name does not contain a “.”
+the suffix “.scad” is appended.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># these lines have the same effect</span>
+<span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+<span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="s2">&quot;output&quot;</span> <span class="p">)</span>
+<span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="s2">&quot;output.scad&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.sphere">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">sphere</code><span class="sig-paren">(</span><em class="sig-param">r</em>, <em class="sig-param">f=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.sphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>sphere shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> – the radius of the sphere</p></li>
+<li><p><strong>facets</strong> – number of sphere facets</p></li>
+</ul>
+</dd>
+</dl>
+<p>The size of the sphere is specified by its radius.</p>
+<p>Optionally, the number of sphere facets can be specified.
+The default is the global variable number_of_sphere_facets.</p>
+<div class="figure align-default">
+<img alt="_images/sphere1_128.png" src="_images/sphere1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> \
+   <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span> <span class="p">)</span> \
+   <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">4</span> <span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.split_box">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">split_box</code><span class="sig-paren">(</span><em class="sig-param">b</em>, <em class="sig-param">s</em>, <em class="sig-param">h</em>, <em class="sig-param">d=&lt;psml.vector object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.split_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>split an enclosure in top and bottom parts</p>
+<p>This function splices a box into separate top and bottom parts,
+which are placed next to each other
+(default: 5 mm apart in x direction).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>b</strong> – the box to splice</p></li>
+<li><p><strong>s</strong> – the size of the box</p></li>
+<li><p><strong>h</strong> – height at which the box is spliced</p></li>
+<li><p><strong>d</strong> – distance between the parts</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.text">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">text</code><span class="sig-paren">(</span><em class="sig-param">txt: string</em>, <em class="sig-param">height: float = 5</em>, <em class="sig-param">facets: int = None</em>, <em class="sig-param">args=''</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>text shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>txt</strong> – the text</p></li>
+<li><p><strong>height</strong> – the letter height</p></li>
+<li><p><strong>facets</strong> – number of facets used to draw the letters</p></li>
+<li><p><strong>args</strong> – extra arguments</p></li>
+</ul>
+</dd>
+</dl>
+<p>Optionally, the number of facets can be specified.
+The default is the global variable number_of_text_facets.</p>
+<div class="figure align-default">
+<img alt="../examples/images/text1_128.png" src="../examples/images/text1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> \
+   <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span> <span class="p">)</span> \
+   <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">4</span> <span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="psml.vector">
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">vector</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, z: Optional[float] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>2d or 3d vector</p>
+<p>This is a 2d (x,y) or 3d (x, y, z) vector.</p>
+<p>A vector is used to denote a location, a displacement (shift)
+a size, or sometimes just 2 or 3 numeric values.</p>
+<p>A vector has members x, y and z.
+For a 2d vector, the z value is None.</p>
+<p>Vectors can be added or subtracted using the + or - operators.
+Vectors can be multiplied or divided
+by a scalar using the * and / operators.</p>
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+    <div class="footer">
+      &copy;2020, Wouter van Ooijen.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
