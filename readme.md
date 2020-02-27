@@ -21,7 +21,7 @@ So as stubborn programmers do, I created yet another one.
 ~~~Python
 from psml import *
 ( sphere( 15 ) + 
-  shift( 0, 0, 18 ) ** (
+  vector( 0, 0, 18 ) ** (
       sphere( 10 ) +
       rotate( 90, 0, 0 ) ** cylinder( 2, 15 ))).write()
 ~~~
@@ -38,7 +38,7 @@ Finally the write method writes the corresponding OpenSCAD code
 to the output.scad file.
 When this file is opened in OpenSCAD, it shows a simple snowman.
 
-![snowman](examples/images/snowman.png)
+![snowman](examples/images/readme_snowman.png)
 
 The power of a general purpose language, in this case Python's
 list comprehension and reduce, can be used to create seemingly complex
@@ -50,15 +50,15 @@ from psml import *
 from functools import reduce
 model = reduce( 
    lambda a, b: a + b, (
-      ( 25 * shift( x, y )) ** (
+      ( 25 * vector( x, y )) ** (
          sphere( 15 ) + 
-         shift( 0, 0, 30 ) ** sphere( 10 ) + 
+         vector( 0, 0, 30 ) ** sphere( 10 ) + 
          cylinder( 3, 30 )
       ) for x in range( 1, 10 ) for y in range( 0, x )))
 model.write( "output.scad" )
 ~~~
 
-![snowman](examples/images/triangle.png)
+![triangle](examples/images/readme_triangle.png)
 
 To use psml, arrange for the psml/psml.py file 
 to be importable from your project. 
@@ -95,39 +95,25 @@ Similar libraries:
 -----------------------------------------------------------------------------   
    
 ToDo list
-- simplify and check the shift parameters
-- mirror: check 0/1
-- more examples
-- more openscad primitives
-- text, extend from dice example
 - dice: handle rounding (shrink text), could be a library element
 - tests for the error handling
 - pip installer
-- extract example text and put it in the readme.md
-- None is acceptable 
-- update examples check file times??
+- extract example text and put it in the readme.md?
 - longer parameter names
 - virtual box that can be asked? with wall-thickness?
 - split should be an operator
 - better name for operator / filter -> manipulator
 - move project box to work
-- text parameters
 - https://medium.com/@richdayandnight/a-simple-tutorial-on-how-to-document-your-python-project-using-sphinx-and-rinohtype-177c22a15b5b
-- scale
-- resize
-- other extrudes
 - color?
 - multimatrix?
 - minkowski?
-- hull?
-- rotate_extrude?
 - polyhedron?
 - allow negative extrusion?
-
+- make _shape_list a nested class?
+- _apply => order of parameters, easier for extern
 - vector init, operators
-- make rotate etc. functions, supply a lambda
-- make rectangle etc. show derived from -> shape (or function!)
-
+- linear extrude versus rotate_extrude (names?)
 
 -----------------------------------------------------------------------------      
       

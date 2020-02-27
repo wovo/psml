@@ -9,22 +9,17 @@ https://www.github.com/wovo/psml
 Distributed under the Boost Software License, Version 1.0.
 
 .. _OpenSCAD: https://www.openscad.org/
+.. _typeguard: https://pypi.org/project/typeguard/
 
 -----------------------------------------------------------------------------
 
 This is a Python library (Python 3 required) for writing
 3D model code that can be rendered and processed by OpenSCAD_.
-This documentation is meant to be usable on its own, 
-without having to read the OpenSCAD documentation.
-Hence it is worded as if the PSML library contains all the functionality,
-while in fact it is in most cases just a thin layer 
-on top of the OpenSCAD language.
 
 The library has a vector class.
 A vector holds x, y and (optional) z numeric values.
 A vector is used to specify (in 2D or 3D) a size, 
-a location or displacement, and sometimes just 2 or 3 values
-that are conveniently grouped together.
+a location, or a displacement, or sometimes just to hold 2 or 3 values.
 A vector can be created from two or three values.
 Two vectors can be added or subtracted.
 A vector can multiplied with or divided by a numeric value.
@@ -42,20 +37,37 @@ Basic flat (2D) objects are rectangle, circle, polygon, and text,
 as shown in the next image.
 
 .. figure::  ../examples/images/intro_rcpt_128.png
+    :target: ../examples/images/intro_rcpt_512.png
 
 A flat object can be extended into a solid object
-by extruding it (in the z direction), <>
+by extruding it (in the z direction), while
+optionally twisting it around the z axis in the process.
+The cross shown below was extruded and twisted while
+it was at the origin. The right circle was extruded and twisted
+while it was just to the right of the origin.
 
 .. figure::  ../examples/images/intro_extrude_128.png
+    :target: ../examples/images/intro_extrude_512.png
+    
 Objects and be added, subtracted and intersected 
 with the operators +, - and \*.
+The image below shows two separate cylinders, the addition of
+these two cylinders, the second cylinder subtracted from the
+first one, and the intersection of the two. 
 
 .. figure::  ../examples/images/intro_asi_128.png
+    :target: ../examples/images/intro_asi_512.png
 
 Manipulators can be applied to an object with the ** (power) operator.
 Basic manipulators are vector, rotate, mirror, scale and resize.
+The example below show an object unchanged, , shifted up, 
+rotated along the x axis, mirrored in the y-z plane (note the eyes), 
+scaled (by 2 in the y and z directions), and resized
+(to fit in a cube).
 
-.. figure::  ../examples/images/intro_vrm_128.png
+
+.. figure::  ../examples/images/intro_vrmsr_128.png
+    :target: ../examples/images/intro_vrmsr_512.png
 
 The repeat2, repeat4 and repeat8 manipulators repeat their subject.
 Repeat2 does this at the original location, 
@@ -66,6 +78,7 @@ Repeat8 does this at the 8 corners of the box
 specified by the vector.
 
 .. figure::  ../examples/images/intro_repeat1_128.png
+    :target: ../examples/images/intro_repeat1_512.png
 
 The negative manipulator creates a dominant emptiness from its subject.
 The image below shows at the left the addition of two normal pipes.
@@ -79,6 +92,26 @@ reduces the dominant emptiness to an normal, and then the
 vertical axle was added.
 
 .. figure::  ../examples/images/intro_negatives1_128.png
+    :target: ../examples/images/intro_negatives1_512.png
+
+In the code examples solid objects are created.
+What is not show is that such an object must be written to a 
+file to be processed by OpenSCAD, using a write() call.
+
+This documentation is meant to be usable on its own, 
+without having to read the OpenSCAD documentation,
+hence it is worded as if the library provides all the 
+functionality, while in fact it is in most cases just a thin layer 
+on top of the OpenSCAD language.
+
+Some OpenSCAD features are not directly available in the library.
+To compensate, a solid can be created from a string, which
+is passed directly to OpenSCAD. 
+Likewise, a manipulator can be constructed from a lambda, which
+gets the string representation of its subject as parameter.
+
+The library has type hints. 
+The examples use typeguard_ to check these hints.
 
 -----------------------------------------------------------------------------
 
@@ -86,9 +119,16 @@ vertical axle was added.
 #============================================================================
 
 from __future__ import annotations
-from typing import Union
-#from functools import reduce
+from typing import Union, Tuple, Iterable
 
+# specifiers used in the type annotations
+_shape_or_shape_list = Union[ "shape", "_shape_list" ]
+_shape_or_none = Union[ "shape", None ]
+_str_or_none = Union[ str, None ]
+_float_or_vector = Union[ float, "vector" ]
+_float_or_none = Union[ float, None ]
+_vector_or_pair = Union[ "vector", Tuple[float,float]]
+           
 
 #============================================================================
 # 
@@ -97,11 +137,12 @@ from typing import Union
 #============================================================================
 
 # the default number of facets for a circle and a sphere
-number_of_circle_facets  = 32
-number_of_sphere_facets  = 32
-number_of_text_facets    = 32
+number_of_circle_facets   = 32
+number_of_sphere_facets   = 32
+number_of_text_facets     = 32
+number_of_extrude_facets  = 32
 
-def facets( numer_of_facts: int ) -> None:
+def facets( numer_of_facets: int ) -> None:
     """accuracy (number of facets) of circles, spheres and fonts
     
     The default setting (32) is a compromise between speed and accuracy.
@@ -112,28 +153,30 @@ def facets( numer_of_facts: int ) -> None:
     This function has effect on shapes that are created
     after its call, so better call it before you create any elements.
     
-    .. figure::  ../examples/images/facets1_128.png    
-    .. code-block:: 
+    .. figure::  ../examples/images/example_facets1_128.png    
+        :target: ../examples/images/example_facets1_512.png  
+    .. literalinclude:: ../examples/example_facets1.py
+        :lines: 10
     
-        cylinder( 10, 20 ) + vector( 25, 0, 10 ) ** sphere( 10 )
-    
-    .. figure::  ../examples/images/facets2_128.png 
-    .. code-block:: 
-    
-        facets( 9 )
-        cylinder( 10, 20 ) + vector( 25, 0, 10 ) ** sphere( 10 )
+    .. figure::  ../examples/images/example_facets2_128.png 
+        :target: ../examples/images/example_facets2_512.png  
+    .. literalinclude:: ../examples/example_facets2.py
+        :lines: 9,11 
     """
     
     global number_of_circle_facets
-    number_of_circle_facets = n
+    number_of_circle_facets = numer_of_facets
     
     global number_of_sphere_facets
-    number_of_sphere_facets = n
+    number_of_sphere_facets = numer_of_facets
     
     global number_of_text_facets
-    number_of_text_facets = n
+    number_of_text_facets = numer_of_facets
 
-def _indent( txt: string ) -> string:
+    global number_of_extrude_facets
+    number_of_extrude_facets = numer_of_facets
+
+def _indent( txt: str ) -> str:
     """return the text with all lines indented one indent step
     """
     return "".join( map(
@@ -142,10 +185,10 @@ def _indent( txt: string ) -> string:
         ))
 
 def _apply( 
-    a : shape, 
-    b : shape, 
-    s1 : string,
-    s2 : string
+    a : _shape_or_none, 
+    b : _shape_or_none, 
+    s1 : str,
+    s2 : _str_or_none
 ) -> shape:
     """
     apply an OpenSCAD operation to one or two shapes
@@ -182,8 +225,8 @@ class shape:
     """
     
     def __init__( self, 
-       positive : string, 
-       negative : string = "" 
+       positive : str, 
+       negative : str = "" 
     ):  
         """a simple shape
         
@@ -198,7 +241,7 @@ class shape:
         self._positive_text = positive
         self._negative_text = negative
         
-    def _merge( self ) -> _shape:
+    def _merge( self ) -> shape:
        """hook for shape_list
        """
        return self    
@@ -219,7 +262,7 @@ class shape:
         """
         return self._merge()._negative_text
         
-    def __str__( self ) -> string:       
+    def __str__( self ) -> str:       
         """the OpenSCAD text representation of the shape
         
         This method returns the OpenSCAD representation of the 
@@ -253,7 +296,7 @@ class shape:
         f.write( str( self ) )
         f.close()       
         
-    def __add__( self, rhs: shape ) -> shape:
+    def __add__( self, rhs: _shape_or_none ) -> shape:
         """add two shapes
         
         This could be mapped directly to an OpenSCAD union(),
@@ -264,9 +307,10 @@ class shape:
             
     __radd__ = __add__            
 
-    def __sub__( self, rhs: shape ) -> shape:
+    def __sub__( self, rhs: _shape_or_none ) -> shape:
         """subtract two shapes
         """
+        if rhs == None: return self        
         return _apply( self, rhs, "difference()", "union()" )
               
     def __mul__( self, rhs: shape ) -> shape:
@@ -274,8 +318,6 @@ class shape:
         """
         return _apply( self, rhs, "intersection()", "union()" )       
     
-_shape_or_shape_list = Union[ shape, "_shape_list" ]
-
 class _shape_list( shape ):
     """list of shapes
     
@@ -325,9 +367,6 @@ class _shape_list( shape ):
 #
 #============================================================================
 
-_float_or_vector = Union[ float, "vector" ]
-_float_or_none = Union[ float, None ]
-
 class vector:
     """2d or 3d vector
    
@@ -344,6 +383,15 @@ class vector:
     by a scalar using the * and / operators.
     """
     
+    x = None
+    """x (first) value of the vector"""
+    
+    y = None
+    """y (second) value of the vector"""
+    
+    z = None
+    """z (third) value of the vector"""
+    
     def __init__( self, 
         x: _float_or_vector, 
         y: _float_or_none = None, 
@@ -359,22 +407,26 @@ class vector:
         if isinstance( x, vector ):
            if ( y != None ) or ( z != None ):
               raise Exception( 
-                 "vector constructor called with a vector as first parameter"
-                 " and some more parameters. " )
+                 "vector constructor called with a vector as"
+                 " first parameter but also some more parameters." )
                  
            self.x, self.y, self.z = x.x, x.y, x.z
            
         else:
            if y == None:
               raise Exception( 
-                 "called vector with one parameter which is not a vector" )
+                 "called vector with one parameter"
+                 " which is not a vector" )
                  
            self.x, self.y, self.z = x, y, z
+        
+    def _list( self ):
+       return [ self.x, self.y, self.z ]    
         
     def _add( self, 
         a: _float_or_none, 
         b: _float_or_none 
-    ) -> float:
+    ) -> _float_or_none:
         """add two values, where either (but not both) could be None
         """
         if a == None: return b
@@ -398,7 +450,7 @@ class vector:
     def _sub( self, 
         a: _float_or_none, 
         b: _float_or_none 
-    ) -> float:
+    ) -> _float_or_none:
         """subtract two values, where either (but not both) could be None
         """
         if a == None: 
@@ -424,7 +476,7 @@ class vector:
     def _mul( self, 
         a: _float_or_none, 
         b: _float_or_none 
-    ) -> float:
+    ) -> _float_or_none:
         """multiply two values, where either (but not both) could be None
         """
         if a == None: return None
@@ -444,7 +496,7 @@ class vector:
     def _div( self, 
         a: _float_or_none, 
         b: float 
-    ):
+    ) -> _float_or_none:
         """divide two values, where the first could be None
         """
         if a == None: return None
@@ -459,7 +511,7 @@ class vector:
             self.y / v, 
             self._div( self.z, v ) )
 
-    def __str__( self ) -> string:
+    def __str__( self ) -> str:
         """convert to [ x, y ] or [ x, y, z ] string format
         """      
         if self.z == None:
@@ -467,70 +519,97 @@ class vector:
         else:
             return "[ %f, %f, %f ]" % ( self.x, self.y, self.z )
             
-    def __pow__( self, subject : shape ) -> shape:
+    def __pow__( self, subject : _shape_or_none ) -> _shape_or_none:
         """apply the vector to a shape
         
         :param subject: the shape that is to be displaced (shifted)
         
         A vector can be applied to a shape using the ** operator.
-        This will displace (shift) the shape.        
+        This will displace (shift) the shape.      
+
+        The subject can be None instead of a shape,
+        in which case the result will also be None.        
         """        
         return _apply( 
            subject, None,
            "translate( %s )" % str( self ), None )
+           
+identity = vector( 0, 0, 0 )
+"""modifier that doesn't change its subject
+"""           
       
-def dup2( v ):
-    """return vector( v, v ): a vector with x and y set to 0
+def dup2( v: float ) -> vector:
+    """vector( v, v )
+    
+    :param v: the value for x and y   
+    
+    Return a vector with both x and y set to v.
     """
     return vector( v, v )
 
-def dup3( v ):
-    """return vector( v, v, v ): a vector with x, y and z set to 0
+def dup3( v: float ) -> vector:
+    """vector( v, v, v )
+
+    :param v: the value for x, y and z
+    
+    Return a vector with x, y and z set to v.
     """
     return vector( v, v, v )   
      
-def right( v ):
-    """vector that shifts right by v
+def right( v: float ) -> vector:
+    """vector that shifts right (along the x axis) by v
+    
+    :param v: the shift distance
     
     Return the vector( v, 0, 0 ): 
     a vector with x set to v, and y and z to 0.
     """   
     return vector( v, 0, 0 ) 
    
-def left( v ):
-    """vector that shifts left by v
+def left( v: float ) -> vector:
+    """vector that shifts left (along the x axis) by v
+    
+    :param v: the shift distance    
     
     Return vector( -v, 0, 0 ): 
     a vector with x set to -v, and y and z to 0.
     """   
     return vector( -v, 0, 0 )   
       
-def back( v ):
-    """vector that shifts back by v
+def back( v: float ) -> vector:
+    """vector that shifts back (away from you along the y axis) by v 
+    
+    :param v: the shift distance    
     
     Return vector( 0, v, 0 ): 
     a vector with y set to v, and x and z to 0.
     """   
     return vector( 0, v, 0 ) 
    
-def front( v ):
-    """vector that shifts to the front by v
+def front( v: float ) -> vector:
+    """vector that shifts to the front (towards you along the y axis) by v
+    
+    :param v: the shift distance    
     
     Return vector( 0, -v, 0 ): 
     a vector with y set to -v, and x and z to 0.
     """   
     return vector( 0, -v, 0 )   
       
-def up( v ):
-    """vector that shifts up by v
+def up( v: float ) -> vector:
+    """vector that shifts up (along the z axis) by v
+    
+    :param v: the shift distance    
     
     Return vector( 0, 0, v ): 
     a vector with z set to v, and x and y to 0.
     """      
     return vector( 0, 0, v ) 
    
-def down( v ):
-    """vector that shifts down by v
+def down( v: float ) -> vector:
+    """vector that shifts down (along the z axis) by v
+    
+    :param v: the shift distance    
     
     Return vector( 0, 0, -v ): 
     a vector with z set to v, and x and y to 0.
@@ -544,7 +623,11 @@ def down( v ):
 #
 #============================================================================ 
 
-def rectangle( x, y = None, rounding = 0 ):
+def rectangle( 
+    x: _float_or_vector, 
+    y: _float_or_none = None, 
+    rounding: float = 0 
+) -> shape:
     """rectangle shape
     
     :param x: x size, or a vector which specifies both sizes
@@ -556,19 +639,17 @@ def rectangle( x, y = None, rounding = 0 ):
     The rectangle has its lower-left corner at the origin.    
     The rounding specifies the radius of the rounding 
     at the corners and edges.     
-    The default rounding is 0, which yields sharp boundaries.    
+    The default rounding is 0, which yields sharp boundaries.  
     
-    .. figure::  ../examples/images/rectangle1_128.png    
-    .. code-block:: 
+    .. figure::  ../examples/images/example_rectangle1_128.png   
+        :target: ../examples/images/example_rectangle1_512.png 
+    .. literalinclude:: ../examples/example_rectangle1.py
+        :lines: 10-11        
     
-        rectangle( 20, 30 )
-        # or rectangle( vector( 20, 30 ), rounding = 0 )
-    
-    .. figure::  ../examples/images/rectangle2_128.png 
-    .. code-block:: 
-    
-        rectangle( 20, 30, 3 )
-        # or rectangle( vector( 20, 30 ), rounding = 3 )
+    .. figure::  ../examples/images/example_rectangle2_128.png   
+        :target: ../examples/images/example_rectangle2_512.png 
+    .. literalinclude:: ../examples/example_rectangle2.py
+        :lines: 10-11  
     """
     
     s = vector( x, y )
@@ -583,7 +664,12 @@ def rectangle( x, y = None, rounding = 0 ):
            vector( 0, r ) ** rectangle( x,         y - 2 * r ) +
            vector( r, 0 ) ** rectangle( x - 2 * r, y         ) ) 
       
-def box( x, y: float = None, z: float = None, rounding = 0 )-> shape:
+def box( 
+    x: _float_or_vector, 
+    y: _float_or_none = None, 
+    z: _float_or_none = None, 
+    rounding: float = 0
+) -> shape:
     """box shape
     
     :param x: x size, or a vector which specifies all 3 sizes
@@ -598,17 +684,15 @@ def box( x, y: float = None, z: float = None, rounding = 0 )-> shape:
     at the corners and edges.     
     The default rounding is 0, which yields sharp boundaries.
     
-    .. figure::  ../examples/images/box1_128.png    
-    .. code-block:: 
-    
-        box( 20, 30, 10 )
-        # or box( vector( 20, 30, 10 ), 0 )
-    
-    .. figure::  ../examples/images/box2_128.png 
-    .. code-block:: 
-    
-        box( 20, 30, 10, 2 )
-        # or box( vector( 20, 30, 10 ), 2 )
+    .. figure::  ../examples/images/example_box1_128.png   
+        :target: ../examples/images/example_box1_512.png 
+    .. literalinclude:: ../examples/example_box1.py
+        :lines: 10
+        
+    .. figure::  ../examples/images/example_box2_128.png   
+        :target: ../examples/images/example_box2_512.png 
+    .. literalinclude:: ../examples/example_box2.py
+        :lines: 10
     """
     
     s = vector( x, y, z )
@@ -622,16 +706,20 @@ def box( x, y: float = None, z: float = None, rounding = 0 )-> shape:
             dup3( r ) ** repeat8( s - 2 * dup3( r ) ) ** sphere( r ) +
             
             vector( 0, 0, r ) ** 
-                extrude( z - 2 * r ) ** rectangle ( x, y, r ) +
+                extrude( z - 2 * r ) ** rectangle( x, y, r ) +
                 
             vector( 0, y - r, 0 ) ** rotate( 90, 0, 0 ) ** 
-                extrude( y - 2 * r ) ** rectangle ( x, z, r ) + 
+                extrude( y - 2 * r ) ** rectangle( x, z, r ) + 
                 
             vector( x - r, 0, 0 ) ** rotate(  0, -90, 0 ) ** 
-                extrude( x - 2 * r ) ** rectangle ( z, y, r )
+                extrude( x - 2 * r ) ** 
+                rectangle( z, y, r )
         )       
            
-def circle( radius, facets = None ):
+def circle( 
+    radius: float, 
+    facets: _float_or_none = None 
+) -> shape:
     """circle shape
     
     :param radius: the radius of the circle
@@ -642,15 +730,15 @@ def circle( radius, facets = None ):
     Optionally, the number of circle facets can be specified.
     The default is the global variable number_of_circle_facets.   
     
-    .. figure::  ../examples/images/circle1_128.png    
-    .. code-block:: 
-    
-        circle( 20 )
-    
-    .. figure::  ../examples/images/circle2_128.png  
-    .. code-block:: 
-    
-        circle( 20, facets = 5 )    
+    .. figure::  ../examples/images/example_circle1_128.png   
+        :target: ../examples/images/example_circle1_512.png 
+    .. literalinclude:: ../examples/example_circle1.py
+        :lines: 10
+        
+    .. figure::  ../examples/images/example_circle2_128.png   
+        :target: ../examples/images/example_circle2_512.png 
+    .. literalinclude:: ../examples/example_circle2.py
+        :lines: 10
     """    
         
     # number_of_circle_facets can't be the default value because
@@ -660,7 +748,11 @@ def circle( radius, facets = None ):
     return shape( 
         "circle( r=%f, $fn=%d );" % ( radius, facets ) ) 
      
-def cylinder( radius, height = None, facets = None ):
+def cylinder( 
+    radius: _float_or_vector, 
+    height: _float_or_none = None, 
+    facets: _float_or_none = None 
+) -> shape:
     """cylinder shape
     
     :param radius: the radius of the cylinder, 
@@ -674,10 +766,10 @@ def cylinder( radius, height = None, facets = None ):
     Optionally, the number of circle facets can be specified.
     The default is the global variable number_of_circle_facets.
     
-    .. figure::  ../examples/images/cylinder1_128.png    
-    .. code-block:: 
-    
-        cylinder( 10, 20 ) + right( 35 ) ** cylinder( vector( 20, 10 ))
+    .. figure::  ../examples/images/example_cylinder1_128.png   
+        :target: ../examples/images/example_cylinder1_512.png 
+    .. literalinclude:: ../examples/example_cylinder1.py
+        :lines: 10
     """   
     
     sizes = vector( radius, height )
@@ -689,7 +781,12 @@ def cylinder( radius, height = None, facets = None ):
        "cylinder( r=%f, h=%f, $fn=%d );" 
            % ( sizes.x, sizes.y, facets ) )
 
-def cone( radius1, radius2 = None, height = None,  facets = None ):
+def cone( 
+   radius1: _float_or_vector, 
+   radius2: _float_or_none = None, 
+   height: _float_or_none = None,  
+   facets: _float_or_none = None 
+) -> shape:
     """cone shape
     
     :param radius1: the radius of the cone at its bottom,
@@ -704,10 +801,10 @@ def cone( radius1, radius2 = None, height = None,  facets = None ):
     Optionally, the number of circle facets can be specified.
     The default is the global variable number_of_circle_facets.
     
-    .. figure::  ../examples/images/cone1_128.png    
-    .. code-block:: 
-    
-        cylinder( 10, 20 ) + right( 35 ) ** cylinder( vector( 20, 10 ))    
+    .. figure::  ../examples/images/example_cone1_128.png   
+        :target: ../examples/images/example_cone1_512.png 
+    .. literalinclude:: ../examples/example_cone1.py
+        :lines: 10            
     """   
     
     sizes = vector( radius1, radius2, height )    
@@ -719,7 +816,10 @@ def cone( radius1, radius2 = None, height = None,  facets = None ):
         "cylinder( r1=%f, r2=%f, h=%f, $fn=%d );"
             % ( sizes.x, sizes.y, sizes.z, facets ) )
     
-def sphere( r, f = None ):
+def sphere( 
+    r: float, 
+    facets: _float_or_none = None 
+) -> shape:
     """sphere shape
     
     :param radius: the radius of the sphere
@@ -730,26 +830,24 @@ def sphere( r, f = None ):
     Optionally, the number of sphere facets can be specified.
     The default is the global variable number_of_sphere_facets.
     
-    .. figure::  ../examples/images/sphere1_128.png    
-    .. code-block:: 
-    
-        sphere( 10 ) \\
-           + ( right( 20 ) ** sphere( 6 ) ) \\
-           + ( right( 35 ) ** sphere( 4 ))     
+    .. figure::  ../examples/images/example_sphere1_128.png   
+        :target: ../examples/images/example_sphere1_512.png 
+    .. literalinclude:: ../examples/example_sphere1.py
+        :lines: 10-12
     """    
     
     # see remark in circle    
-    if f == None: f = number_of_sphere_facets
+    if facets == None: facets = number_of_sphere_facets
     
     return shape( 
-        "sphere( r=%f, $fn=%d );" % ( r, f ) )
-
+        "sphere( r=%f, $fn=%d );" % ( r, facets ) )
+          
 def text( 
-    txt: string, 
+    txt: str, 
     height: float = 5, 
     facets: int = None,
     args = "" 
-):
+) -> shape:
     """text shape
     
     :param txt: the text
@@ -760,25 +858,38 @@ def text(
     Optionally, the number of facets can be specified.
     The default is the global variable number_of_text_facets.
     
-    .. figure::  ../examples/images/text1_128.png    
-    .. code-block:: 
+    .. figure::  ../examples/images/example_text1_128.png   
+        :target: ../examples/images/example_text1_512.png 
+    .. literalinclude:: ../examples/example_text1.py
+        :lines: 10  
+        
+    Optionally, a string of extra arguments can be specified.
+    Check the OpenSCAD_ documentation for the possible arguments.
+    For your convenience, single quotes in the arg string are
+    replaced by double quotes (OpenSCAD requires double quotes).
     
-        sphere( 10 ) \\
-           + ( right( 20 ) ** sphere( 6 ) ) \\
-           + ( right( 35 ) ** sphere( 4 ))     
+    .. figure::  ../examples/images/example_text2_128.png   
+        :target: ../examples/images/example_text2_512.png 
+    .. literalinclude:: ../examples/example_text2.py
+        :lines: 10-14
+        
+    The horizontal size of a text depends on the specified height
+    the text itself, and on the font. This makes it difficult to
+    predict the size of a text. The resize operator can be 
+    useful to scale a text to a know size.
     """    
     
     # see remark in circle
     if facets == None: facets = number_of_circle_facets     
 
     if args != "":
-       args = ", " + args
+       args = ", " + args.replace( "'", '"' )
        
     return shape( 
         'text( "%s", %f, $fn=%d %s );'
             % ( txt, height, facets, args ) )   
 
-def polygon( points ):
+def polygon( points: Iterable[ _vector_or_pair ] ) -> shape:
     """polygon shape
     
     :param points: a list of 2d vectors or value pairs
@@ -787,15 +898,13 @@ def polygon( points ):
     Each edge point can be specified by either a 
     vector or a pair of values.
     
-    .. figure::  ../examples/images/polygon_128.png    
-    .. code-block:: 
-    
-        polygon( [ 
-            [ 0, 0 ], [ 3, 0 ], [ 2, 1 ], [ 2, 2 ], 
-            [ 3, 2 ], [ 1, 3 ], [ 0, 3 ], [ 1, 1 ] ] )    
+    .. figure::  ../examples/images/example_polygon1_128.png     
+        :target: ../examples/images/example_polygon1_512.png 
+    .. literalinclude:: ../examples/example_polygon1.py
+        :lines: 10-12 
     """    
     
-    def _2d_point_str( p ):
+    def _2d_point_str( p: _vector_or_pair ):
         if isinstance( p, vector ):
             return "[%f,%f]" % ( p.x, p.y )
         else:
@@ -803,173 +912,357 @@ def polygon( points ):
 
     return shape( 
         'polygon( [ %s ] );' % ( 
-           "".join( self._2d_point_str( p ) + "," for p in points ) ))
-
-
+           "".join( _2d_point_str( p ) + "," for p in points ) ) )   
+   
+   
 #============================================================================
 # 
-# OpenSCAD modifier
+# modifiers
 #
-#============================================================================
+#============================================================================  
+
+class modifier:
+    """modifier that can be applied by **
+    
+    A modifier is an object that can be applied to its 
+    subject, a shape, using the ** operator. 
+    A modifier is constructed by providing the function that
+    is to be applied.
+    
+    The subject can be None instead of a shape,
+    in which case the result will also be None.    
+    
+    .. figure::  ../examples/images/example_modifier1_128.png    
+    .. literalinclude:: ../examples/example_modifier1.py
+        :lines: 10
+    """
+
+    def __init__( self, function ):
+        self.function = function
       
-class extrude:
+    def __pow__( self, subject: _shape_or_none ) -> _shape_or_none:
+        if subject == None:
+           return None
+        else:   
+           return self.function( subject )
+           
+def extrude( 
+    height: float,
+    twist: float = 0,
+    scale: float = 1,
+    facets: int = None,
+):     
     """extrude operator: extend a 2d object in the z direction
-    """
-    
-    def __init__( self, z ):
-        self.z = z   
-         
-    def __pow__( self, subject: shape ) -> shape:
-        return _apply( 
-           subject, None, 
-           "linear_extrude( %f )\n" % self.z, None )
-        
-class rotate:
-    """rotate operator: rotate an object around one or more axises
-    """
-    
-    def __init__( self, x, y = None, z = None ):    
-        if y != None:
-           x = vector( x, y, z )
-        self.angles = x
 
-    def __pow__( self, subject: shape ) -> shape:   
-        return _apply( 
+    :param height: the height over which the object will be extruded    
+    :param twist: the degrees over which the object is rotated along
+                  the z axis over its extrusion height (default: 0)
+    :param scale: the scaling determines the relative size of the object 
+                  at its maximum extrusion height
+    :param facets: number of steps used in the extrusion    
+    
+    Optionally, the number of steps can be specified.
+    The default is the global variable number_of_extrude_facets.
+    """
+    
+    # see remark in circle
+    if facets == None: facets = number_of_extrude_facets  
+     
+    return modifier( 
+        lambda subject : 
+            _apply( 
             subject, None,
-            "rotate( %s )" % str( self.angles ), None )     
+            "linear_extrude( height=%f, twist=%f, scale=%f, $fn=%d )\n" % 
+               ( height, twist, scale, facets ), None ) )         
 
-class mirror:
-    """mirror operator: mirror an object in one or more planes
+def mirror(
+    x: _float_or_vector, 
+    y: float = None, 
+    z: float = None 
+):    
+    """mirror operator: mirror an object in a planes
+    
+    :param x: the x of the vector, or the full vector
+    :param y: (optional) the y of the vector     
+    :param z: (optional) the z of the vector    
+    
+    This modifier mirrors its subject in a plane through the origin. 
+    The plane is specified by its normal vector (the vector
+    that is perpendicular to the mirror plane).
+    
+    The vector is either specified as a single vector
+    parameter, or as separate x, y and z values.  
+
+    The example shows a text, the same text mirrored in the 
+    y-z plane, mirrored in the x-z plane, and mirrored in the x-y plane.    
+
+    .. figure::  ../examples/images/example_mirror1_128.png    
+    .. literalinclude:: ../examples/example_mirror1.py
+        :lines: 11,14-17    
     """
     
-    def __init__( self, x, y = None, z = None ):    
-        if y != None:
-           x = vector( x, y, z )
-        self.angles = x
+    normal_vector = vector( x, y, z )
 
-    def __pow__( self, subject: shape ) -> shape:   
-        return _apply( 
+    return modifier( 
+        lambda subject : 
+            _apply( 
            subject, None,
-           "mirror( %s )" % str( self.angles ), None )              
-                    
-class scale:
-    """scale operator: scale an object
+           "mirror( %s )" % str( normal_vector ), None ) )
+           
+def rotate( 
+    x: _float_or_vector, 
+    y: float = None, 
+    z: float = None 
+):
+    """rotate operator: rotate an object around one or more axises
+    
+    :param x: the x of the vector, or the full vector
+    :param y: (optional) the y of the vector     
+    :param z: (optional) the z of the vector     
+    
+    The vector is either specified as a single vector
+    parameter, or as separate x, y and z values.
+    
+    This manipulator rotates its object along one or more axises,
+    by the specified amount in degrees.
+    
+    The example below shows an object, and the same objects
+    rotated 45 degrees, first along the x axis, then along
+    the y axis, and lastly along the z axis.
+    
+    .. figure::  ../examples/images/example_rotate1_128.png    
+    .. literalinclude:: ../examples/example_rotate1.py
+        :lines: 9-15
     """
     
-    def __init__( self, x, y = None, z = None ):    
-        if y != None:
-           x = vector( x, y, z )
-        self.amounts = x
+    angles = vector( x, y, z )
 
-    def __pow__( self, subject: shape ) -> shape:   
-        return _apply( 
-           subject, None,
-           "scale( %s )" % str( self.amounts ), None )              
-                    
-class scale:
+    return modifier( 
+        lambda subject : 
+            _apply( 
+                subject, None,
+                "rotate( %s )" % str( angles ), None ) )    
+
+def scale( 
+    x: _float_or_vector, 
+    y: float = None, 
+    z: float = None 
+):  
+    """scale operator: scale an object in one or more directions
+    
+    :param x: the x of the vector, or the full vector
+    :param y: (optional) the y of the vector     
+    :param z: (optional) the z of the vector     
+    
+    The vector is either specified as a single vector
+    parameter, or as separate x, y and z values.
+    
+    This manipulator scales its subject by the factors
+    indicated for the x, y and z direction.
+    A factor of 1 retains the original size,
+    2 makes it twice at large, etc.
+    
+    The example below shows a box, and the same box 
+    scaled by 2 in the x direction, scaled by 2 in the y direction,
+    and scaled by 2 in the z direction.
+    
+    .. figure::  ../examples/images/example_scale1_128.png    
+    .. literalinclude:: ../examples/example_scale1.py
+        :lines: 9-15    
+    """
+    
+    directions = vector( x, y, z )
+
+    return modifier( 
+        lambda subject :
+            _apply( 
+                subject, None,
+                "scale( %s )" % str( directions ), None ) )      
+
+def _hull():  
+    return modifier( 
+        lambda subject :
+            _apply( 
+                subject, None,
+                "hull()", None ) ) 
+                
+hull = _hull()
+"""convex hull
+    
+This manipulator creates the convex hull around its subject,
+which can be 2D or 3D.
+
+.. figure::  ../examples/images/example_hull1_128.png    
+.. literalinclude:: ../examples/example_hull1.py
+    :lines: 11, 14-15    
+"""
+   
+def resize( 
+    x: _float_or_vector,
+    y: float = None, 
+    z: float = None 
+):  
     """resize operator: resize an object
+    
+    :param x: the x of the vector, or the full vector
+    :param y: (optional) the y of the vector     
+    :param z: (optional) the z of the vector     
+    
+    The vector is either specified as a single vector
+    parameter, or as separate x, y and z values.
+    
+    This manipulator resizes its subject to the sizes
+    indicated for the x, y and z direction.
+    A size of 0 keeps the size (in that direction) unchanged.
+    A size of None scales the size in that direction
+    with another non-0 non-None size.
+    
+    The example below shows a text, and
+    the same text scaled to fit in a 30 by 10 rectangle.
+    
+    .. figure::  ../examples/images/example_resize1_128.png    
+    .. literalinclude:: ../examples/example_resize1.py
+        :lines: 9, 11      
+        
+    The example below shows a sphere, and
+    the same sphere scaled to size 40 in the x direction,
+    unchanged (size 10) ijn the y direction,
+    and z matching the x direction (scaled to 40).
+    
+    .. figure::  ../examples/images/example_resize2_128.png    
+    .. literalinclude:: ../examples/example_resize2.py
+        :lines: 9, 11      
     """
     
-    def __init__( self, x, y = None, z = None ):    
-        if y != None:
-           x = vector( x, y, z )
-        self.amounts = x
+    amounts = vector( x, y, z )
+    auto = str( [ x == None for x in amounts._list() ] ).lower()
 
-    def __pow__( self, subject: shape ) -> shape:   
-        return _apply( 
-           subject, None,
-           "resize( %s )" % str( self.amounts ), None )              
-                    
-     
-#============================================================================
-# 
-# shape manipulators
-#
-#============================================================================     
-     
-class _negative:
-    """makes its subject a dominant negative
-    
-    This manipulator makes its subject a dominant negative:
-    something that will not be filled.
-    """
-
-    def __pow__( self, subject: shape ) -> shape:   
-       return shape( "", str( subject ) )
+    return modifier( 
+        lambda subject :
+            _apply( 
+                subject, None,
+                "resize( %s, auto=%s )" % 
+                   ( str( amounts ), auto ), None ) )  
+                
+def _negative():
+    return modifier( 
+       lambda subject : 
+          shape( "", str( subject ) ) )
        
 negative = _negative()       
-           
-class _positive:
-    """makes its subject a dominant negative
+"""makes its subject a dominant negative
     
-When something must be 
+This manipulator makes its subject a dominant negative:
+something that will not be filled.
+"""
+           
+def _positive():
+    return modifier( 
+       lambda subject : 
+          shape( str( subject ), "" ) )
+       
+positive = _positive()   
+"""removes dominant negatives
+    
 The positive manipulator subtracts and removes 
 the dominant emptinesses in its subject, so an 
 solid can be placed in the space of what was a dominant emptiness.    
-    
-    This manipulator makes its subject a dominant negative:
-    something that will not be filled.
-    """
-
-    def __pow__( self, subject: shape ) -> shape:   
-       return shape( str( subject ), "" )
-       
-positive = _positive()   
-"""
 """
 
-identity = vector( 0, 0, 0 )
-"""modifier that doesn't change its subject
-"""
-           
-class repeat2:
+def repeat2( 
+    x: _float_or_vector,
+    y: float = None, 
+    z: float = None 
+):
     """repeat at two positions
     
-    This manipulator repeats its subject twice: once at its original
-    location, and once at the indicated vector.
+    :param x: the x of the vector, or the full vector
+    :param y: (optional) the y of the vector     
+    :param z: (optional) the z of the vector     
+    
+    The vector is either specified as a single vector
+    parameter, or as separate x, y and z values.
+    
+    This manipulator repeats its subject twice: 
+    once at its original location, 
+    and once shifted by the specified vector.
+    
+    .. figure::  ../examples/images/example_repeat2_128.png    
+    .. literalinclude:: ../examples/example_repeat2.py
+        :lines: 10
     """
+    
+    v = vector( x, y, z )
 
-    def __init__( self, x, y = None, z = None ):
-       self.vector= vector( x, y, z )
-
-    def __pow__( self, subject: shape ) -> shape:   
-       return subject + ( self.vector ** subject )
+    return modifier( 
+       lambda subject :
+          subject + ( v ** subject ) )
            
-class repeat4:
-
-    def __init__( self, x, y = None ):
-       if y == None:
-          self.x, self.y = x.x, x.y
-       else:
-          self.x, self.y = x, y
-
-    def __pow__( self, subject: shape ) -> shape:   
-       return (
-           vector(      0,      0 ) ** subject +
-           vector( self.x,      0 ) ** subject +
-           vector(      0, self.y ) ** subject +
-           vector( self.x, self.y ) ** subject
-       )
+def repeat4( 
+    x: _float_or_vector,
+    y: float = None
+):    
+    """repeat at four positions
+    
+    :param x: the x of the vector, or the full vector
+    :param y: (optional) the y of the vector     
+    
+    The vector is either specified as a single vector
+    parameter, or as separate x and y values.
+    
+    This manipulator repeats its subject at the
+    four corners of the rectangle specified by the parameters.
+    
+    .. figure::  ../examples/images/example_repeat4_128.png       
+    .. literalinclude:: ../examples/example_repeat4.py
+        :lines: 10     
+    """
+    
+    v = vector( x, y )
+    
+    return modifier( 
+       lambda subject :       
+           vector(   0,   0 ) ** subject +
+           vector( v.x,   0 ) ** subject +
+           vector(   0, v.y ) ** subject +
+           vector( v.x, v.y ) ** subject
+    )
            
-class repeat8:
+def repeat8( 
+    x: _float_or_vector, 
+    y: float = None, 
+    z: float = None 
+):
+    """repeat at eight positions
+    
+    :param x: the x of the vector, or the full vector
+    :param y: (optional) the y of the vector     
+    :param z: (optional) the z of the vector     
+    
+    The vector is either specified as a single vector
+    parameter, or as separate x, y and z values.
+    
+    This manipulator repeats its subject at the corners
+    of the box specified by the parameters.
+    
+    .. figure::  ../examples/images/example_repeat8_128.png       
+    .. literalinclude:: ../examples/example_repeat8.py
+        :lines: 10
+    """
+    
+    v = vector( x, y, z )
 
-    def __init__( self, x, y = None, z = None ):
-       if y == None:
-          self.x, self.y, self.z = x.x, x.y, x.z
-       else:
-          self.x, self.y, self.z, = x, y, z
-
-    def __pow__( self, subject: shape ) -> shape:   
-       return (
-           vector(      0,      0,      0 ) ** subject +
-           vector( self.x,      0,      0 ) ** subject +
-           vector(      0, self.y,      0 ) ** subject +
-           vector( self.x, self.y,      0 ) ** subject +
-           vector(      0,      0, self.z ) ** subject +
-           vector( self.x,      0, self.z ) ** subject +
-           vector(      0, self.y, self.z ) ** subject +
-           vector( self.x, self.y, self.z ) ** subject
-       )
+    return modifier( 
+        lambda subject :
+            vector(   0,   0,   0 ) ** subject +
+            vector( v.x,   0,   0 ) ** subject +
+            vector(   0, v.y,   0 ) ** subject +
+            vector( v.x, v.y,   0 ) ** subject +
+            vector(   0,   0, v.z ) ** subject +
+            vector( v.x,   0, v.z ) ** subject +
+            vector(   0, v.y, v.z ) ** subject +
+            vector( v.x, v.y, v.z ) ** subject
+    )
             
    
 #============================================================================

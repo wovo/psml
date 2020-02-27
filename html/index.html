@@ -38,17 +38,11 @@
 <p>Distributed under the Boost Software License, Version 1.0.</p>
 <hr class="docutils" />
 <p>This is a Python library (Python 3 required) for writing
-3D model code that can be rendered and processed by <a class="reference external" href="https://www.openscad.org/">OpenSCAD</a>.
-This documentation is meant to be usable on its own,
-without having to read the OpenSCAD documentation.
-Hence it is worded as if the PSML library contains all the functionality,
-while in fact it is in most cases just a thin layer
-on top of the OpenSCAD language.</p>
+3D model code that can be rendered and processed by <a class="reference external" href="https://www.openscad.org/">OpenSCAD</a>.</p>
 <p>The library has a vector class.
 A vector holds x, y and (optional) z numeric values.
 A vector is used to specify (in 2D or 3D) a size,
-a location or displacement, and sometimes just 2 or 3 values
-that are conveniently grouped together.
+a location, or a displacement, or sometimes just to hold 2 or 3 values.
 A vector can be created from two or three values.
 Two vectors can be added or subtracted.
 A vector can multiplied with or divided by a numeric value.
@@ -64,22 +58,33 @@ box, cylinder, cone, and sphere.</p>
 <p>Basic flat (2D) objects are rectangle, circle, polygon, and text,
 as shown in the next image.</p>
 <div class="figure align-default">
-<img alt="_images/intro_rcpt_128.png" src="_images/intro_rcpt_128.png" />
+<a class="reference external image-reference" href="../examples/images/intro_rcpt_512.png"><img alt="_images/intro_rcpt_128.png" src="_images/intro_rcpt_128.png" /></a>
 </div>
 <p>A flat object can be extended into a solid object
-by extruding it (in the z direction), &lt;&gt;</p>
+by extruding it (in the z direction), while
+optionally twisting it around the z axis in the process.
+The cross shown below was extruded and twisted while
+it was at the origin. The right circle was extruded and twisted
+while it was just to the right of the origin.</p>
 <div class="figure align-default">
-<img alt="../examples/images/intro_extrude_128.png" src="../examples/images/intro_extrude_128.png" />
+<a class="reference external image-reference" href="../examples/images/intro_extrude_512.png"><img alt="_images/intro_extrude_128.png" src="_images/intro_extrude_128.png" /></a>
 </div>
 <p>Objects and be added, subtracted and intersected
-with the operators +, - and *.</p>
+with the operators +, - and *.
+The image below shows two separate cylinders, the addition of
+these two cylinders, the second cylinder subtracted from the
+first one, and the intersection of the two.</p>
 <div class="figure align-default">
-<img alt="_images/intro_asi_128.png" src="_images/intro_asi_128.png" />
+<a class="reference external image-reference" href="../examples/images/intro_asi_512.png"><img alt="_images/intro_asi_128.png" src="_images/intro_asi_128.png" /></a>
 </div>
 <p>Manipulators can be applied to an object with the ** (power) operator.
-Basic manipulators are vector, rotate, mirror, scale and resize.</p>
+Basic manipulators are vector, rotate, mirror, scale and resize.
+The example below show an object unchanged, , shifted up,
+rotated along the x axis, mirrored in the y-z plane (note the eyes),
+scaled (by 2 in the y and z directions), and resized
+(to fit in a cube).</p>
 <div class="figure align-default">
-<img alt="_images/intro_vrm_128.png" src="_images/intro_vrm_128.png" />
+<a class="reference external image-reference" href="../examples/images/intro_vrmsr_512.png"><img alt="_images/intro_vrmsr_128.png" src="_images/intro_vrmsr_128.png" /></a>
 </div>
 <p>The repeat2, repeat4 and repeat8 manipulators repeat their subject.
 Repeat2 does this at the original location,
@@ -89,7 +94,7 @@ specified by the vector.
 Repeat8 does this at the 8 corners of the box
 specified by the vector.</p>
 <div class="figure align-default">
-<img alt="_images/intro_repeat1_128.png" src="_images/intro_repeat1_128.png" />
+<a class="reference external image-reference" href="../examples/images/intro_repeat1_512.png"><img alt="_images/intro_repeat1_128.png" src="_images/intro_repeat1_128.png" /></a>
 </div>
 <p>The negative manipulator creates a dominant emptiness from its subject.
 The image below shows at the left the addition of two normal pipes.
@@ -102,12 +107,40 @@ At the right the crossing was first made positive, which
 reduces the dominant emptiness to an normal, and then the
 vertical axle was added.</p>
 <div class="figure align-default">
-<img alt="_images/intro_negatives1_128.png" src="_images/intro_negatives1_128.png" />
+<a class="reference external image-reference" href="../examples/images/intro_negatives1_512.png"><img alt="_images/intro_negatives1_128.png" src="_images/intro_negatives1_128.png" /></a>
 </div>
+<p>In the code examples solid objects are created.
+What is not show is that such an object must be written to a
+file to be processed by OpenSCAD, using a write() call.</p>
+<p>This documentation is meant to be usable on its own,
+without having to read the OpenSCAD documentation,
+hence it is worded as if the library provides all the
+functionality, while in fact it is in most cases just a thin layer
+on top of the OpenSCAD language.</p>
+<p>Some OpenSCAD features are not directly available in the library.
+To compensate, a solid can be created from a string, which
+is passed directly to OpenSCAD.
+Likewise, a manipulator can be constructed from a lambda, which
+gets the string representation of its subject as parameter.</p>
+<p>The library has type hints.
+The examples use <a class="reference external" href="https://pypi.org/project/typeguard/">typeguard</a> to check these hints.</p>
 <hr class="docutils" />
 <dl class="function">
+<dt id="psml.back">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">back</code><span class="sig-paren">(</span><em class="sig-param">v: float</em><span class="sig-paren">)</span> &#x2192; psml.vector<a class="headerlink" href="#psml.back" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector that shifts back (away from you along the y axis) by v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> – the shift distance</p>
+</dd>
+</dl>
+<p>Return vector( 0, v, 0 ):
+a vector with y set to v, and x and z to 0.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="psml.box">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">box</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y: Optional[float] = None</em>, <em class="sig-param">z: Optional[float] = None</em>, <em class="sig-param">rounding=0</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.box" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">box</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, z: Optional[float] = None, rounding: float = 0</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.box" title="Permalink to this definition">¶</a></dt>
 <dd><p>box shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -126,24 +159,22 @@ The rounding specifies the radius of the rounding
 at the corners and edges.
 The default rounding is 0, which yields sharp boundaries.</p>
 <div class="figure align-default">
-<img alt="_images/box1_128.png" src="_images/box1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_box1_512.png"><img alt="_images/example_box1_128.png" src="_images/example_box1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">box</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span>
-<span class="c1"># or box( vector( 20, 30, 10 ), 0 )</span>
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="_images/box2_128.png" src="_images/box2_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_box2_512.png"><img alt="_images/example_box2_128.png" src="_images/example_box2_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">box</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span> <span class="p">)</span>
-<span class="c1"># or box( vector( 20, 30, 10 ), 2 )</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">box</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span> <span class="p">),</span> <span class="n">rounding</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
 <dt id="psml.circle">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">circle</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">facets=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.circle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">circle</code><span class="sig-paren">(</span><em class="sig-param">radius: float</em>, <em class="sig-param">facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.circle" title="Permalink to this definition">¶</a></dt>
 <dd><p>circle shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -158,13 +189,13 @@ The circle is in the x-y plane, with its center at the origin.
 Optionally, the number of circle facets can be specified.
 The default is the global variable number_of_circle_facets.</p>
 <div class="figure align-default">
-<img alt="_images/circle1_128.png" src="_images/circle1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_circle1_512.png"><img alt="_images/example_circle1_128.png" src="_images/example_circle1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="_images/circle2_128.png" src="_images/circle2_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_circle2_512.png"><img alt="_images/example_circle2_128.png" src="_images/example_circle2_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="n">facets</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">)</span>
 </pre></div>
@@ -173,7 +204,7 @@ The default is the global variable number_of_circle_facets.</p>
 
 <dl class="function">
 <dt id="psml.cone">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cone</code><span class="sig-paren">(</span><em class="sig-param">radius1</em>, <em class="sig-param">radius2=None</em>, <em class="sig-param">height=None</em>, <em class="sig-param">facets=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.cone" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cone</code><span class="sig-paren">(</span><em class="sig-param">radius1: Union[float, vector], radius2: Optional[float] = None, height: Optional[float] = None, facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.cone" title="Permalink to this definition">¶</a></dt>
 <dd><p>cone shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -191,16 +222,16 @@ at its base, its radius at its top, and its height.</p>
 <p>Optionally, the number of circle facets can be specified.
 The default is the global variable number_of_circle_facets.</p>
 <div class="figure align-default">
-<img alt="_images/cone1_128.png" src="_images/cone1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_cone1_512.png"><img alt="_images/example_cone1_128.png" src="_images/example_cone1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cone</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cone</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span> <span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
 <dt id="psml.cylinder">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cylinder</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">height=None</em>, <em class="sig-param">facets=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.cylinder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cylinder</code><span class="sig-paren">(</span><em class="sig-param">radius: Union[float, vector], height: Optional[float] = None, facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.cylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>cylinder shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -217,7 +248,7 @@ at its base, and its height.</p>
 <p>Optionally, the number of circle facets can be specified.
 The default is the global variable number_of_circle_facets.</p>
 <div class="figure align-default">
-<img alt="_images/cylinder1_128.png" src="_images/cylinder1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_cylinder1_512.png"><img alt="_images/example_cylinder1_128.png" src="_images/example_cylinder1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">))</span>
 </pre></div>
@@ -225,27 +256,65 @@ The default is the global variable number_of_circle_facets.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="psml.down">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">down</code><span class="sig-paren">(</span><em class="sig-param">v: float</em><span class="sig-paren">)</span> &#x2192; psml.vector<a class="headerlink" href="#psml.down" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector that shifts down (along the z axis) by v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> – the shift distance</p>
+</dd>
+</dl>
+<p>Return vector( 0, 0, -v ):
+a vector with z set to v, and x and y to 0.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="psml.dup2">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">dup2</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.dup2" title="Permalink to this definition">¶</a></dt>
-<dd><p>return a vector with x and y set to v</p>
-<p>bla bla</p>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">dup2</code><span class="sig-paren">(</span><em class="sig-param">v: float</em><span class="sig-paren">)</span> &#x2192; psml.vector<a class="headerlink" href="#psml.dup2" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector( v, v )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> – the value for x and y</p>
+</dd>
+</dl>
+<p>Return a vector with both x and y set to v.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="psml.dup3">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">dup3</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.dup3" title="Permalink to this definition">¶</a></dt>
-<dd><p>return a vector with x, y and z set to v</p>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">dup3</code><span class="sig-paren">(</span><em class="sig-param">v: float</em><span class="sig-paren">)</span> &#x2192; psml.vector<a class="headerlink" href="#psml.dup3" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector( v, v, v )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> – the value for x, y and z</p>
+</dd>
+</dl>
+<p>Return a vector with x, y and z set to v.</p>
 </dd></dl>
 
-<dl class="class">
+<dl class="function">
 <dt id="psml.extrude">
-<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">extrude</code><span class="sig-paren">(</span><em class="sig-param">z</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.extrude" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">extrude</code><span class="sig-paren">(</span><em class="sig-param">height: float</em>, <em class="sig-param">twist: float = 0</em>, <em class="sig-param">scale: float = 1</em>, <em class="sig-param">facets: Optional[int] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.extrude" title="Permalink to this definition">¶</a></dt>
 <dd><p>extrude operator: extend a 2d object in the z direction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> – the height over which the object will be extruded</p></li>
+<li><p><strong>twist</strong> – the degrees over which the object is rotated along
+the z axis over its extrusion height (default: 0)</p></li>
+<li><p><strong>scale</strong> – the scaling determines the relative size of the object
+at its maximum extrusion height</p></li>
+<li><p><strong>facets</strong> – number of steps used in the extrusion</p></li>
+</ul>
+</dd>
+</dl>
+<p>Optionally, the number of steps can be specified.
+The default is the global variable number_of_extrude_facets.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="psml.facets">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">facets</code><span class="sig-paren">(</span><em class="sig-param">numer_of_facts: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#psml.facets" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">facets</code><span class="sig-paren">(</span><em class="sig-param">numer_of_facets: int</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#psml.facets" title="Permalink to this definition">¶</a></dt>
 <dd><p>accuracy (number of facets) of circles, spheres and fonts</p>
 <p>The default setting (32) is a compromise between speed and accuracy.</p>
 <p>For quick rendering of complex designs
@@ -253,18 +322,31 @@ a lower value (10, or even 5) might be appropriate.</p>
 <p>This function has effect on shapes that are created
 after its call, so better call it before you create any elements.</p>
 <div class="figure align-default">
-<img alt="_images/facets1_128.png" src="_images/facets1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_facets1_512.png"><img alt="_images/example_facets1_128.png" src="_images/example_facets1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="_images/facets2_128.png" src="_images/facets2_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_facets2_512.png"><img alt="_images/example_facets2_128.png" src="_images/example_facets2_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">facets</span><span class="p">(</span> <span class="mi">9</span> <span class="p">)</span>
 <span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.front">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">front</code><span class="sig-paren">(</span><em class="sig-param">v: float</em><span class="sig-paren">)</span> &#x2192; psml.vector<a class="headerlink" href="#psml.front" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector that shifts to the front (towards you along the y axis) by v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> – the shift distance</p>
+</dd>
+</dl>
+<p>Return vector( 0, -v, 0 ):
+a vector with y set to -v, and x and z to 0.</p>
 </dd></dl>
 
 <dl class="function">
@@ -286,21 +368,108 @@ Use split() to separate it into a top and a bottom part.
 (Or use project_enclosure() which does these things for you.)</p>
 </dd></dl>
 
+<dl class="data">
+<dt id="psml.hull">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">hull</code><em class="property"> = &lt;psml.modifier object&gt;</em><a class="headerlink" href="#psml.hull" title="Permalink to this definition">¶</a></dt>
+<dd><p>convex hull</p>
+<p>This manipulator creates the convex hull around its subject,
+which can be 2D or 3D.</p>
+<div class="figure align-default">
+<img alt="_images/example_hull1_128.png" src="_images/example_hull1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">15</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span> <span class="p">)</span>
+<span class="n">x</span> <span class="o">+</span> 
+<span class="n">right</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">hull</span> <span class="o">**</span> <span class="n">x</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="psml.identity">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">identity</code><em class="property"> = &lt;psml.vector object&gt;</em><a class="headerlink" href="#psml.identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>modifier that doesn’t change its subject</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.left">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">left</code><span class="sig-paren">(</span><em class="sig-param">v: float</em><span class="sig-paren">)</span> &#x2192; psml.vector<a class="headerlink" href="#psml.left" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector that shifts left (along the x axis) by v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> – the shift distance</p>
+</dd>
+</dl>
+<p>Return vector( -v, 0, 0 ):
+a vector with x set to -v, and y and z to 0.</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="psml.m_screw">
 <em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">m_screw</code><span class="sig-paren">(</span><em class="sig-param">diameter</em>, <em class="sig-param">thread</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.m_screw" title="Permalink to this definition">¶</a></dt>
 <dd><p>a metric (m3 etc.) screw</p>
 </dd></dl>
 
-<dl class="class">
+<dl class="function">
 <dt id="psml.mirror">
-<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">mirror</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">z=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.mirror" title="Permalink to this definition">¶</a></dt>
-<dd><p>mirror operator: mirror an object in one or more planes</p>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">mirror</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, z: Optional[float] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.mirror" title="Permalink to this definition">¶</a></dt>
+<dd><p>mirror operator: mirror an object in a planes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the x of the vector, or the full vector</p></li>
+<li><p><strong>y</strong> – (optional) the y of the vector</p></li>
+<li><p><strong>z</strong> – (optional) the z of the vector</p></li>
+</ul>
+</dd>
+</dl>
+<p>This modifier mirrors its subject in a plane through the origin.
+The plane is specified by its normal vector (the vector
+that is perpendicular to the mirror plane).</p>
+<p>The vector is either specified as a single vector
+parameter, or as separate x, y and z values.</p>
+<p>The example shows a text, the same text mirrored in the
+y-z plane, mirrored in the x-z plane, and mirrored in the x-y plane.</p>
+<div class="figure align-default">
+<img alt="_images/example_mirror1_128.png" src="_images/example_mirror1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">extrude</span><span class="p">(</span> <span class="mi">4</span> <span class="p">)</span> <span class="o">**</span> <span class="n">text</span><span class="p">(</span> <span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span>
+<span class="n">x</span> <span class="o">+</span>
+<span class="n">right</span><span class="p">(</span>  <span class="mi">70</span> <span class="p">)</span> <span class="o">**</span> <span class="n">mirror</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="o">**</span> <span class="n">x</span> <span class="o">+</span>
+<span class="n">right</span><span class="p">(</span>  <span class="mi">80</span> <span class="p">)</span> <span class="o">**</span> <span class="n">mirror</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="o">**</span> <span class="n">x</span> <span class="o">+</span>
+<span class="n">right</span><span class="p">(</span> <span class="mi">120</span> <span class="p">)</span> <span class="o">**</span> <span class="n">mirror</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">**</span> <span class="n">x</span> 
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="psml.modifier">
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">modifier</code><span class="sig-paren">(</span><em class="sig-param">function</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.modifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>modifier that can be applied by **</p>
+<p>A modifier is an object that can be applied to its
+subject, a shape, using the ** operator.
+A modifier is constructed by providing the function that
+is to be applied.</p>
+<p>The subject can be None instead of a shape,
+in which case the result will also be None.</p>
+<div class="figure align-default">
+<img alt="_images/example_modifier1_128.png" src="_images/example_modifier1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">modifier</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">s</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="psml.negative">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">negative</code><em class="property"> = &lt;psml.modifier object&gt;</em><a class="headerlink" href="#psml.negative" title="Permalink to this definition">¶</a></dt>
+<dd><p>makes its subject a dominant negative</p>
+<p>This manipulator makes its subject a dominant negative:
+something that will not be filled.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="psml.polygon">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">polygon</code><span class="sig-paren">(</span><em class="sig-param">points</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.polygon" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">polygon</code><span class="sig-paren">(</span><em class="sig-param">points: Iterable[Union[vector, Tuple[float, float]]]</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.polygon" title="Permalink to this definition">¶</a></dt>
 <dd><p>polygon shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -311,13 +480,22 @@ Use split() to separate it into a top and a bottom part.
 Each edge point can be specified by either a
 vector or a pair of values.</p>
 <div class="figure align-default">
-<img alt="../examples/images/polygon_128.png" src="../examples/images/polygon_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_polygon1_512.png"><img alt="_images/example_polygon1_128.png" src="_images/example_polygon1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">polygon</span><span class="p">(</span> <span class="p">[</span>
-    <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="p">],</span>
-    <span class="p">[</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">]</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">polygon</span><span class="p">(</span> <span class="p">[</span> 
+   <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="p">],</span> 
+   <span class="p">[</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">]</span> <span class="p">]</span> <span class="p">)</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="data">
+<dt id="psml.positive">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">positive</code><em class="property"> = &lt;psml.modifier object&gt;</em><a class="headerlink" href="#psml.positive" title="Permalink to this definition">¶</a></dt>
+<dd><p>removes dominant negatives</p>
+<p>The positive manipulator subtracts and removes
+the dominant emptinesses in its subject, so an
+solid can be placed in the space of what was a dominant emptiness.</p>
 </dd></dl>
 
 <dl class="function">
@@ -338,7 +516,7 @@ vector or a pair of values.</p>
 
 <dl class="function">
 <dt id="psml.rectangle">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">rectangle</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">rounding=0</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.rectangle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">rectangle</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, rounding: float = 0</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.rectangle" title="Permalink to this definition">¶</a></dt>
 <dd><p>rectangle shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -356,39 +534,219 @@ The rounding specifies the radius of the rounding
 at the corners and edges.
 The default rounding is 0, which yields sharp boundaries.</p>
 <div class="figure align-default">
-<img alt="_images/rectangle1_128.png" src="_images/rectangle1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_rectangle1_512.png"><img alt="_images/example_rectangle1_128.png" src="_images/example_rectangle1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rectangle</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span>
-<span class="c1"># or rectangle( vector( 20, 30 ), rounding = 0 )</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rectangle</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span> <span class="p">),</span> <span class="n">rounding</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span>
+<span class="c1"># or rectangle( 20, 30 )</span>
 </pre></div>
 </div>
 <div class="figure align-default">
-<img alt="_images/rectangle2_128.png" src="_images/rectangle2_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_rectangle2_512.png"><img alt="_images/example_rectangle2_128.png" src="_images/example_rectangle2_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rectangle</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span> <span class="p">)</span>
-<span class="c1"># or rectangle( vector( 20, 30 ), rounding = 3 )</span>
+<span class="c1"># or rectangle( shift( 20, 30 ), rounding = 3 )</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="class">
+<dl class="function">
 <dt id="psml.repeat2">
-<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">repeat2</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">z=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.repeat2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">repeat2</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, z: Optional[float] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.repeat2" title="Permalink to this definition">¶</a></dt>
 <dd><p>repeat at two positions</p>
-<p>This manipulator repeats its subject twice: once at its original
-location, and once at the indicated vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the x of the vector, or the full vector</p></li>
+<li><p><strong>y</strong> – (optional) the y of the vector</p></li>
+<li><p><strong>z</strong> – (optional) the z of the vector</p></li>
+</ul>
+</dd>
+</dl>
+<p>The vector is either specified as a single vector
+parameter, or as separate x, y and z values.</p>
+<p>This manipulator repeats its subject twice:
+once at its original location,
+and once shifted by the specified vector.</p>
+<div class="figure align-default">
+<img alt="_images/example_repeat2_128.png" src="_images/example_repeat2_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat2</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
-<dl class="class">
-<dt id="psml.rotate">
-<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">z=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.rotate" title="Permalink to this definition">¶</a></dt>
-<dd><p>rotate operator: rotate an object around one or more axises</p>
+<dl class="function">
+<dt id="psml.repeat4">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">repeat4</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.repeat4" title="Permalink to this definition">¶</a></dt>
+<dd><p>repeat at four positions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the x of the vector, or the full vector</p></li>
+<li><p><strong>y</strong> – (optional) the y of the vector</p></li>
+</ul>
+</dd>
+</dl>
+<p>The vector is either specified as a single vector
+parameter, or as separate x and y values.</p>
+<p>This manipulator repeats its subject at the
+four corners of the rectangle specified by the parameters.</p>
+<div class="figure align-default">
+<img alt="_images/example_repeat4_128.png" src="_images/example_repeat4_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat4</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span> <span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
-<dl class="class">
-<dt id="psml.scale">
-<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y=None</em>, <em class="sig-param">z=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.scale" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="psml.repeat8">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">repeat8</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, z: Optional[float] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.repeat8" title="Permalink to this definition">¶</a></dt>
+<dd><p>repeat at eight positions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the x of the vector, or the full vector</p></li>
+<li><p><strong>y</strong> – (optional) the y of the vector</p></li>
+<li><p><strong>z</strong> – (optional) the z of the vector</p></li>
+</ul>
+</dd>
+</dl>
+<p>The vector is either specified as a single vector
+parameter, or as separate x, y and z values.</p>
+<p>This manipulator repeats its subject at the corners
+of the box specified by the parameters.</p>
+<div class="figure align-default">
+<img alt="_images/example_repeat8_128.png" src="_images/example_repeat8_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat8</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">3</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.resize">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">resize</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, z: Optional[float] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.resize" title="Permalink to this definition">¶</a></dt>
 <dd><p>resize operator: resize an object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the x of the vector, or the full vector</p></li>
+<li><p><strong>y</strong> – (optional) the y of the vector</p></li>
+<li><p><strong>z</strong> – (optional) the z of the vector</p></li>
+</ul>
+</dd>
+</dl>
+<p>The vector is either specified as a single vector
+parameter, or as separate x, y and z values.</p>
+<p>This manipulator resizes its subject to the sizes
+indicated for the x, y and z direction.
+A size of 0 keeps the size (in that direction) unchanged.
+A size of None scales the size in that direction
+with another non-0 non-None size.</p>
+<p>The example below shows a text, and
+the same text scaled to fit in a 30 by 10 rectangle.</p>
+<div class="figure align-default">
+<img alt="_images/example_resize1_128.png" src="_images/example_resize1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span> <span class="s2">&quot;hello world&quot;</span> <span class="p">)</span>
+<span class="n">t</span> <span class="o">+</span> <span class="n">back</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">resize</span><span class="p">(</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">t</span>
+</pre></div>
+</div>
+<p>The example below shows a sphere, and
+the same sphere scaled to size 40 in the x direction,
+unchanged (size 10) ijn the y direction,
+and z matching the x direction (scaled to 40).</p>
+<div class="figure align-default">
+<img alt="_images/example_resize2_128.png" src="_images/example_resize2_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+<span class="n">s</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">40</span> <span class="p">)</span> <span class="o">**</span> <span class="n">resize</span><span class="p">(</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span> <span class="p">)</span> <span class="o">**</span> <span class="n">s</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.right">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">right</code><span class="sig-paren">(</span><em class="sig-param">v: float</em><span class="sig-paren">)</span> &#x2192; psml.vector<a class="headerlink" href="#psml.right" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector that shifts right (along the x axis) by v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> – the shift distance</p>
+</dd>
+</dl>
+<p>Return the vector( v, 0, 0 ):
+a vector with x set to v, and y and z to 0.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.rotate">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, z: Optional[float] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>rotate operator: rotate an object around one or more axises</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the x of the vector, or the full vector</p></li>
+<li><p><strong>y</strong> – (optional) the y of the vector</p></li>
+<li><p><strong>z</strong> – (optional) the z of the vector</p></li>
+</ul>
+</dd>
+</dl>
+<p>The vector is either specified as a single vector
+parameter, or as separate x, y and z values.</p>
+<p>This manipulator rotates its object along one or more axises,
+by the specified amount in degrees.</p>
+<p>The example below shows an object, and the same objects
+rotated 45 degrees, first along the x axis, then along
+the y axis, and lastly along the z axis.</p>
+<div class="figure align-default">
+<img alt="_images/example_rotate1_128.png" src="_images/example_rotate1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span> <span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">c</span> <span class="o">+</span> 
+    <span class="n">right</span><span class="p">(</span>  <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">rotate</span><span class="p">(</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span> <span class="p">)</span> <span class="o">**</span> <span class="n">c</span> <span class="o">+</span>
+    <span class="n">right</span><span class="p">(</span>  <span class="mi">60</span> <span class="p">)</span> <span class="o">**</span> <span class="n">rotate</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span>  <span class="mi">0</span> <span class="p">)</span> <span class="o">**</span> <span class="n">c</span> <span class="o">+</span>
+    <span class="n">right</span><span class="p">(</span> <span class="mi">100</span> <span class="p">)</span> <span class="o">**</span> <span class="n">rotate</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">45</span> <span class="p">)</span> <span class="o">**</span> <span class="n">c</span> 
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.scale">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">scale</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, z: Optional[float] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>scale operator: scale an object in one or more directions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – the x of the vector, or the full vector</p></li>
+<li><p><strong>y</strong> – (optional) the y of the vector</p></li>
+<li><p><strong>z</strong> – (optional) the z of the vector</p></li>
+</ul>
+</dd>
+</dl>
+<p>The vector is either specified as a single vector
+parameter, or as separate x, y and z values.</p>
+<p>This manipulator scales its subject by the factors
+indicated for the x, y and z direction.
+A factor of 1 retains the original size,
+2 makes it twice at large, etc.</p>
+<p>The example below shows a box, and the same box
+scaled by 2 in the x direction, scaled by 2 in the y direction,
+and scaled by 2 in the z direction.</p>
+<div class="figure align-default">
+<img alt="_images/example_scale1_128.png" src="_images/example_scale1_128.png" />
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span> <span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">b</span> <span class="o">+</span>
+    <span class="n">right</span><span class="p">(</span>  <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">scale</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">**</span> <span class="n">b</span> <span class="o">+</span>
+    <span class="n">right</span><span class="p">(</span>  <span class="mi">70</span> <span class="p">)</span> <span class="o">**</span> <span class="n">scale</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">**</span> <span class="n">b</span> <span class="o">+</span>
+    <span class="n">right</span><span class="p">(</span> <span class="mi">100</span> <span class="p">)</span> <span class="o">**</span> <span class="n">scale</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">**</span> <span class="n">b</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -411,7 +769,7 @@ It is assumed to be spliced into the top and bottom parts.</p>
 
 <dl class="class">
 <dt id="psml.shape">
-<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">shape</code><span class="sig-paren">(</span><em class="sig-param">positive: string</em>, <em class="sig-param">negative: string = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.shape" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">psml.</code><code class="sig-name descname">shape</code><span class="sig-paren">(</span><em class="sig-param">positive: str</em>, <em class="sig-param">negative: str = ''</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.shape" title="Permalink to this definition">¶</a></dt>
 <dd><p>2D or 3D shape</p>
 <p>Shapes can be added, subtracted or intersected by using the
 +, - or * operators.</p>
@@ -442,7 +800,7 @@ the suffix “.scad” is appended.</p>
 
 <dl class="function">
 <dt id="psml.sphere">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">sphere</code><span class="sig-paren">(</span><em class="sig-param">r</em>, <em class="sig-param">f=None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.sphere" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">sphere</code><span class="sig-paren">(</span><em class="sig-param">r: float</em>, <em class="sig-param">facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.sphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>sphere shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -456,11 +814,11 @@ the suffix “.scad” is appended.</p>
 <p>Optionally, the number of sphere facets can be specified.
 The default is the global variable number_of_sphere_facets.</p>
 <div class="figure align-default">
-<img alt="_images/sphere1_128.png" src="_images/sphere1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_sphere1_512.png"><img alt="_images/example_sphere1_128.png" src="_images/example_sphere1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> \
-   <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span> <span class="p">)</span> \
-   <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">4</span> <span class="p">))</span>
+    <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span> <span class="p">)</span> \
+    <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">4</span> <span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -486,7 +844,7 @@ which are placed next to each other
 
 <dl class="function">
 <dt id="psml.text">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">text</code><span class="sig-paren">(</span><em class="sig-param">txt: string</em>, <em class="sig-param">height: float = 5</em>, <em class="sig-param">facets: int = None</em>, <em class="sig-param">args=''</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.text" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">text</code><span class="sig-paren">(</span><em class="sig-param">txt: str</em>, <em class="sig-param">height: float = 5</em>, <em class="sig-param">facets: Optional[int] = None</em>, <em class="sig-param">args=''</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.text" title="Permalink to this definition">¶</a></dt>
 <dd><p>text shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -501,13 +859,42 @@ which are placed next to each other
 <p>Optionally, the number of facets can be specified.
 The default is the global variable number_of_text_facets.</p>
 <div class="figure align-default">
-<img alt="../examples/images/text1_128.png" src="../examples/images/text1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_text1_512.png"><img alt="_images/example_text1_128.png" src="_images/example_text1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> \
-   <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span> <span class="p">)</span> \
-   <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">4</span> <span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">text</span><span class="p">(</span> <span class="s2">&quot;Hello world&quot;</span> <span class="p">)</span>
 </pre></div>
 </div>
+<p>Optionally, a string of extra arguments can be specified.
+Check the <a class="reference external" href="https://www.openscad.org/">OpenSCAD</a> documentation for the possible arguments.
+For your convenience, single quotes in the arg string are
+replaced by double quotes (OpenSCAD requires double quotes).</p>
+<div class="figure align-default">
+<a class="reference external image-reference" href="../examples/images/example_text2_512.png"><img alt="_images/example_text2_128.png" src="_images/example_text2_128.png" /></a>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">text</span><span class="p">(</span> 
+   <span class="s2">&quot;Mary had a little lamb&quot;</span><span class="p">,</span> 
+   <span class="n">facets</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> 
+   <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;halign=&#39;center&#39;,valign=&#39;center&#39;&quot;</span> 
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The horizontal size of a text depends on the specified height
+the text itself, and on the font. This makes it difficult to
+predict the size of a text. The resize operator can be
+useful to scale a text to a know size.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.up">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">up</code><span class="sig-paren">(</span><em class="sig-param">v: float</em><span class="sig-paren">)</span> &#x2192; psml.vector<a class="headerlink" href="#psml.up" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector that shifts up (along the z axis) by v</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> – the shift distance</p>
+</dd>
+</dl>
+<p>Return vector( 0, 0, v ):
+a vector with z set to v, and x and y to 0.</p>
 </dd></dl>
 
 <dl class="class">
@@ -522,6 +909,24 @@ For a 2d vector, the z value is None.</p>
 <p>Vectors can be added or subtracted using the + or - operators.
 Vectors can be multiplied or divided
 by a scalar using the * and / operators.</p>
+<dl class="attribute">
+<dt id="psml.vector.x">
+<code class="sig-name descname">x</code><em class="property"> = None</em><a class="headerlink" href="#psml.vector.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>x (first) value of the vector</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="psml.vector.y">
+<code class="sig-name descname">y</code><em class="property"> = None</em><a class="headerlink" href="#psml.vector.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>y (second) value of the vector</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="psml.vector.z">
+<code class="sig-name descname">z</code><em class="property"> = None</em><a class="headerlink" href="#psml.vector.z" title="Permalink to this definition">¶</a></dt>
+<dd><p>z (third) value of the vector</p>
+</dd></dl>
+
 </dd></dl>
 
 <div class="toctree-wrapper compound">

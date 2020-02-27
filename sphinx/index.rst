@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 PSML - Python Solid Modeling Library
-================================
+====================================
 
 .. automodule:: psml
     :members:
