@@ -38,7 +38,7 @@ Finally the write method writes the corresponding OpenSCAD code
 to the output.scad file.
 When this file is opened in OpenSCAD, it shows a simple snowman.
 
-![snowman](examples/images/readme_snowman.png)
+[![snowman](examples/images/readme_snowman_128.png)](examples/images/readme_snowman_512.png)
 
 The power of a general purpose language, in this case Python's
 list comprehension and reduce, can be used to create seemingly complex
@@ -58,7 +58,9 @@ model = reduce(
 model.write( "output.scad" )
 ~~~
 
-![triangle](examples/images/readme_triangle.png)
+[![triangle](examples/images/readme_triangle_128.png)](examples/images/readme_triangle_512.png)
+
+[![alt text](image "tooltip")](hyperlink)
 
 To use psml, arrange for the psml/psml.py file 
 to be importable from your project. 
