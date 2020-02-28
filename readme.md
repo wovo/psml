@@ -60,8 +60,6 @@ model.write( "output.scad" )
 
 [![triangle](examples/images/readme_triangle_128.png)](examples/images/readme_triangle_512.png)
 
-[![alt text](image "tooltip")](hyperlink)
-
 To use psml, arrange for the psml/psml.py file 
 to be importable from your project. 
 In the examples I add its directory to the search path.
