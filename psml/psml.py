@@ -184,21 +184,24 @@ def _indent( txt: str ) -> str:
             txt.split( "\n" )
         ))
 
-def _apply( 
+def _apply2( 
+    s1 : str,
+    s2 : str,
     a : _shape_or_none, 
     b : _shape_or_none, 
-    s1 : str,
-    s2 : _str_or_none
 ) -> shape:
     """
-    apply an OpenSCAD operation to one or two shapes
+    apply an OpenSCAD operation to two shapes
+    
+    :param s1: operation to apply to the positive parts
+    :param s2: operation to apply to the negative parts
+    :param a: first shape
+    :param b: second shape
     """
     if b == None: 
        b = shape( "", "" )
        if a == None:
           a = b
-    if s2 == None:
-       s2 = s1    
     return shape(
         s1 + "{\n" + _indent( 
             a._positive() + "\n" + 
@@ -207,6 +210,40 @@ def _apply(
         s2 + "{\n" + _indent( 
             a._negative() + "\n" + 
             b._negative() + "\n" ) +
+        "}",
+    )             
+
+def apply( 
+    text : str,
+    subject : _shape_or_none
+) -> _shape_or_none:
+    """apply an OpenSCAD operation to a shape
+    
+    :param text: the text of the OpenSCAD operation
+    :param subject: the shape to which the operation is applied
+
+    This function applies an OpenSCAD operation to a shape.
+    This can be useful for OpenSCAD operations that are not
+    otherwise available in the library.
+    
+    For convenience, single quotes in the text are replaced by
+    double quotes (OpenSCAD uses double quotes).
+    
+    Coloring and translation are available in the library, 
+    but could be done with OpenSCAD functions as shown in the example.
+    
+    .. figure::  ../examples/images/example_apply1_128.png   
+        :target: ../examples/images/example_apply1_512.png 
+    .. literalinclude:: ../examples/example_apply1.py
+        :lines: 10
+    """ 
+    text = text.replace( "'", '"' )
+    return None if subject == None else shape(
+        text + "{\n" + _indent( 
+            subject._positive() + "\n" ) +
+        "}",
+        text + "{\n" + _indent( 
+            subject._negative() + "\n" ) +
         "}",
     )             
     
@@ -311,12 +348,12 @@ class shape:
         """subtract two shapes
         """
         if rhs == None: return self        
-        return _apply( self, rhs, "difference()", "union()" )
+        return _apply2( "difference()", "union()", self, rhs )
               
     def __mul__( self, rhs: shape ) -> shape:
         """intersect two shapes  
         """
-        return _apply( self, rhs, "intersection()", "union()" )       
+        return _apply2( "intersection()", "union()", self, rhs )
     
 class _shape_list( shape ):
     """list of shapes
@@ -350,12 +387,12 @@ class _shape_list( shape ):
        else:   
           self.list.append( x )       
        
-    def _merge( self ) -> shape:    
+    def _merge( self, function = "union()" ) -> shape:    
         return shape( 
-            "union(){\n" + 
+            function + "{\n" + 
                _indent( "".join( x._positive() for x in self.list )) +
             "}",       
-            "union(){\n" + 
+            function + "{\n" + 
                _indent( "".join( x._negative() for x in self.list )) +
             "}"   
         )
@@ -382,6 +419,8 @@ class vector:
     Vectors can be multiplied or divided 
     by a scalar using the * and / operators.
     """
+    
+    # these assignments are here just as anchors for the docstrings
     
     x = None
     """x (first) value of the vector"""
@@ -501,9 +540,9 @@ class vector:
         """
         if a == None: return None
         if b == None: return None   
-        return a * b       
+        return a / b       
    
-    def __div__( self, v: float ):
+    def __truediv__( self, v: float ):
         """divide a vector by a scalar (member-wise division)
         """   
         return vector( 
@@ -530,9 +569,7 @@ class vector:
         The subject can be None instead of a shape,
         in which case the result will also be None.        
         """        
-        return _apply( 
-           subject, None,
-           "translate( %s )" % str( self ), None )
+        return apply( "translate( %s )" % str( self ), subject )
            
 identity = vector( 0, 0, 0 )
 """modifier that doesn't change its subject
@@ -932,9 +969,10 @@ class modifier:
     The subject can be None instead of a shape,
     in which case the result will also be None.    
     
-    .. figure::  ../examples/images/example_modifier1_128.png    
+    .. figure::  ../examples/images/example_modifier1_128.png  
+        :target: ../examples/images/example_modifier1_512.png
     .. literalinclude:: ../examples/example_modifier1.py
-        :lines: 10
+        :lines: 9, 12
     """
 
     def __init__( self, function ):
@@ -945,6 +983,33 @@ class modifier:
            return None
         else:   
            return self.function( subject )
+           
+def _minkowski():           
+    return modifier(
+        lambda subject : 
+           subject._merge( "minkowski()" ) 
+           if isinstance( subject, _shape_list )
+           else subject )
+
+minkowski = _minkowski()
+"""minkowski sum
+
+This modifier computes the Minkowski sum of two or more
+2D or 3D objects. It must be applied to a sum of objects.
+When it is applied to something else (for instance
+the result of applying a modifier) it is a no-op.
+
+    .. figure::  ../examples/images/example_minkowski1_128.png    
+        :target: ../examples/images/example_minkowski1_512.png
+    .. literalinclude:: ../examples/example_minkowski1.py
+        :lines: 9, 12
+
+    .. figure::  ../examples/images/example_minkowski2_128.png    
+        :target: ../examples/images/example_minkowski2_512.png
+    .. literalinclude:: ../examples/example_minkowski2.py
+        :lines: 9, 12
+
+"""
            
 def extrude( 
     height: float,
@@ -969,11 +1034,9 @@ def extrude(
     if facets == None: facets = number_of_extrude_facets  
      
     return modifier( 
-        lambda subject : 
-            _apply( 
-            subject, None,
-            "linear_extrude( height=%f, twist=%f, scale=%f, $fn=%d )\n" % 
-               ( height, twist, scale, facets ), None ) )         
+        lambda subject : apply( 
+            "linear_extrude( height=%f, twist=%f, scale=%f, $fn=%d )\n"
+                % ( height, twist, scale, facets ), subject ) )
 
 def mirror(
     x: _float_or_vector, 
@@ -996,18 +1059,16 @@ def mirror(
     The example shows a text, the same text mirrored in the 
     y-z plane, mirrored in the x-z plane, and mirrored in the x-y plane.    
 
-    .. figure::  ../examples/images/example_mirror1_128.png    
+    .. figure::  ../examples/images/example_mirror1_128.png  
+        :target: ../examples/images/example_mirror1_512.png
     .. literalinclude:: ../examples/example_mirror1.py
         :lines: 11,14-17    
     """
     
     normal_vector = vector( x, y, z )
 
-    return modifier( 
-        lambda subject : 
-            _apply( 
-           subject, None,
-           "mirror( %s )" % str( normal_vector ), None ) )
+    return modifier( lambda subject : 
+        apply( "mirror( %s )" % str( normal_vector ), subject ) )
            
 def rotate( 
     x: _float_or_vector, 
@@ -1031,17 +1092,15 @@ def rotate(
     the y axis, and lastly along the z axis.
     
     .. figure::  ../examples/images/example_rotate1_128.png    
+        :target: ../examples/images/example_rotate1_512.png
     .. literalinclude:: ../examples/example_rotate1.py
         :lines: 9-15
     """
     
     angles = vector( x, y, z )
 
-    return modifier( 
-        lambda subject : 
-            _apply( 
-                subject, None,
-                "rotate( %s )" % str( angles ), None ) )    
+    return modifier( lambda subject : 
+        apply( "rotate( %s )" % str( angles ), subject ) )    
 
 def scale( 
     x: _float_or_vector, 
@@ -1067,24 +1126,19 @@ def scale(
     and scaled by 2 in the z direction.
     
     .. figure::  ../examples/images/example_scale1_128.png    
+        :target: ../examples/images/example_scale1_512.png
     .. literalinclude:: ../examples/example_scale1.py
         :lines: 9-15    
     """
     
     directions = vector( x, y, z )
 
-    return modifier( 
-        lambda subject :
-            _apply( 
-                subject, None,
-                "scale( %s )" % str( directions ), None ) )      
+    return modifier( lambda subject :
+        apply( "scale( %s )" % str( directions ), subject ) )      
 
 def _hull():  
-    return modifier( 
-        lambda subject :
-            _apply( 
-                subject, None,
-                "hull()", None ) ) 
+    return modifier( lambda subject :
+         apply( "hull()", subject ) ) 
                 
 hull = _hull()
 """convex hull
@@ -1093,6 +1147,7 @@ This manipulator creates the convex hull around its subject,
 which can be 2D or 3D.
 
 .. figure::  ../examples/images/example_hull1_128.png    
+    :target: ../examples/images/example_hull1_512.png
 .. literalinclude:: ../examples/example_hull1.py
     :lines: 11, 14-15    
 """
@@ -1121,6 +1176,7 @@ def resize(
     the same text scaled to fit in a 30 by 10 rectangle.
     
     .. figure::  ../examples/images/example_resize1_128.png    
+        :target: ../examples/images/example_resize1_512.png
     .. literalinclude:: ../examples/example_resize1.py
         :lines: 9, 11      
         
@@ -1130,6 +1186,7 @@ def resize(
     and z matching the x direction (scaled to 40).
     
     .. figure::  ../examples/images/example_resize2_128.png    
+        :target: ../examples/images/example_resize2_512.png
     .. literalinclude:: ../examples/example_resize2.py
         :lines: 9, 11      
     """
@@ -1137,17 +1194,14 @@ def resize(
     amounts = vector( x, y, z )
     auto = str( [ x == None for x in amounts._list() ] ).lower()
 
-    return modifier( 
-        lambda subject :
-            _apply( 
-                subject, None,
-                "resize( %s, auto=%s )" % 
-                   ( str( amounts ), auto ), None ) )  
+    return modifier( lambda subject :
+        apply( 
+            "resize( %s, auto=%s )" % ( str( amounts ), auto ),
+            subject ) )
                 
 def _negative():
-    return modifier( 
-       lambda subject : 
-          shape( "", str( subject ) ) )
+    return modifier( lambda subject : 
+        shape( "", str( subject ) ) )
        
 negative = _negative()       
 """makes its subject a dominant negative
@@ -1188,6 +1242,7 @@ def repeat2(
     and once shifted by the specified vector.
     
     .. figure::  ../examples/images/example_repeat2_128.png    
+        :target: ../examples/images/example_repeat2_512.png
     .. literalinclude:: ../examples/example_repeat2.py
         :lines: 10
     """
@@ -1214,6 +1269,7 @@ def repeat4(
     four corners of the rectangle specified by the parameters.
     
     .. figure::  ../examples/images/example_repeat4_128.png       
+        :target: ../examples/images/example_repeat4_512.png
     .. literalinclude:: ../examples/example_repeat4.py
         :lines: 10     
     """
@@ -1246,6 +1302,7 @@ def repeat8(
     of the box specified by the parameters.
     
     .. figure::  ../examples/images/example_repeat8_128.png       
+        :target: ../examples/images/example_repeat8_512.png
     .. literalinclude:: ../examples/example_repeat8.py
         :lines: 10
     """
@@ -1265,6 +1322,98 @@ def repeat8(
     )
             
    
+#============================================================================
+# 
+# colors
+#
+#============================================================================ 
+
+_colors = [
+   "Lavender", "Thistle", "Plum", "Violet", "Orchid", "Fuchsia", "Magenta",
+   "MediumOrchid", "MediumPurple", "BlueViolet", "DarkViolet", "DarkOrchid",
+   "DarkMagenta", "Purple", "Indigo", "DarkSlateBlue", "SlateBlue", 
+   "MediumSlateBlue", "Pink", "LightPink", "HotPink", "DeepPink", 
+   "MediumVioletRed", "PaleVioletRed", "Aqua", "Cyan", "LightCyan", 
+   "PaleTurquoise", "Aquamarine", "Turquoise", "MediumTurquoise", 
+   "DarkTurquoise", "CadetBlue",  "SteelBlue", "LightSteelBlue", 
+   "PowderBlue", "LightBlue", "SkyBlue", "LightSkyBlue", "DeepSkyBlue",
+   "DodgerBlue", "CornflowerBlue", "RoyalBlue", "Blue", "MediumBlue", 
+   "DarkBlue", "Navy", "MidnightBlue", "IndianRed", "LightCoral", "Salmon", 
+   "DarkSalmon", "LightSalmon", "Red", "Crimson", "FireBrick", "DarkRed", 
+   "GreenYellow", "Chartreuse", "LawnGreen", "Lime", "LimeGreen", 
+   "PaleGreen", "LightGreen", "MediumSpringGreen", "SpringGreen", 
+   "MediumSeaGreen", "SeaGreen", "ForestGreen", "Green", "DarkGreen", 
+   "YellowGreen", "OliveDrab", "Olive", "DarkOliveGreen", "MediumAquamarine", 
+   "DarkSeaGreen", "LightSeaGreen", "DarkCyan", "Teal", "LightSalmon", 
+   "Coral", "Tomato", "OrangeRed", "DarkOrange", "Orange", "Gold", "Yellow", 
+   "LightYellow", "LemonChiffon", "LightGoldenrodYellow", "PapayaWhip", 
+   "Moccasin", "PeachPuff", "PaleGoldenrod", "Khaki", "DarkKhaki", 
+   "Cornsilk", "BlanchedAlmond", "Bisque", "NavajoWhite", "Wheat", 
+   "BurlyWood", "Tan", "RosyBrown", "SandyBrown", "Goldenrod", 
+   "DarkGoldenrod", "Peru", "Chocolate", "SaddleBrown", "Sienna", "Brown", 
+   "Maroon", "White", "Snow", "Honeydew", "MintCream", "Azure", "AliceBlue", 
+   "GhostWhite", "WhiteSmoke", "Seashell",  "Beige", "OldLace", "FloralWhite", 
+   "Ivory", "AntiqueWhite", "Linen", "LavenderBlush", "MistyRose", 
+   "Gainsboro", "LightGrey", "Silver", "DarkGray", "Gray", "DimGray", 
+   "LightSlateGray", "SlateGray", "DarkSlateGray", "Black" ]
+   
+_current_module = __import__(__name__)   
+for c in _colors: 
+    # c_copy forces a copy, otherwise the *variable* c 
+    # would be captured (and all colors would be Black
+    f = modifier( lambda s, c_copy = c: apply( 'color( "%s" )' % c_copy, s ))
+    setattr( _current_module, c, f )
+    setattr( _current_module, c.lower(), f )
+    
+def color( 
+   r: _float_or_vector, 
+   g: float = None, 
+   b: float = None,
+   alpha: float = 1.0
+):    
+    """a color in RGB format 
+
+    :param r: the r of the vector, or the full color vector
+    :param g: (optional) the g of the color
+    :param b: (optional) the b of the color     
+    :param alpha: (optional) the alpha value (opacity)
+    
+    The color is either specified as a single vector
+    parameter, or as separate r, g and b values.
+    When a single vector is specified, and alpha value
+    (if present) must be named parameter.
+    
+    The individual color values must be in the range 0..255.
+    
+    An alpha of 0 is full transparency, a value of 1 is a solid color.
+    A lower alpha makes the object more faintly colored.
+    It does not make it opaque (translucent).
+    
+    Colors are visible in OpenSCAD preview, but NOT in after
+    rendering. Hence the examples below show previews, unlike
+    the other examples, which show the result of rendering.
+    
+    .. figure::  ../examples/images/example_color1_128.png       
+        :target: ../examples/images/example_color1_512.png
+    .. literalinclude:: ../examples/example_color1.py
+        :lines: 10-12
+    
+    The color names in the World Wide Web consortium's SVG color list
+    are available, both with PascalCase and in lowercase.
+
+    .. figure::  ../examples/images/example_color2_128.png       
+        :target: ../examples/images/example_color2_512.png
+    .. literalinclude:: ../examples/example_color2.py
+        :lines: 10-12
+    """
+    
+    # the range of OpenSCAD color channels is 0..1
+    c = vector( r, g, b ) / 255.0
+    
+    return modifier( lambda s: 
+       apply( "color( %s, %f )" % ( str( c ), alpha ), s ) )
+
+
 #============================================================================
 # 
 # project enclosure

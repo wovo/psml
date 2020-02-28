@@ -30,9 +30,9 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="psml-python-solid-modeling-library">
-<h1>PSML - Python Solid Modeling Library<a class="headerlink" href="#psml-python-solid-modeling-library" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-psml"></span><p>a library for generating <a class="reference external" href="https://www.openscad.org/">OpenSCAD</a> 3D models</p>
+  <div class="section" id="module-psml">
+<span id="psml-python-solid-modeling-library"></span><h1>PSML - Python Solid Modeling Library<a class="headerlink" href="#module-psml" title="Permalink to this headline">¶</a></h1>
+<p>a library for generating <a class="reference external" href="https://www.openscad.org/">OpenSCAD</a> 3D models</p>
 <p><a class="reference external" href="https://www.github.com/wovo/psml">https://www.github.com/wovo/psml</a></p>
 <p>(c) Wouter van Ooijen (<a class="reference external" href="mailto:wouter&#46;vanooijen&#37;&#52;&#48;hu&#46;nl">wouter<span>&#46;</span>vanooijen<span>&#64;</span>hu<span>&#46;</span>nl</a>)</p>
 <p>Distributed under the Boost Software License, Version 1.0.</p>
@@ -126,6 +126,33 @@ gets the string representation of its subject as parameter.</p>
 The examples use <a class="reference external" href="https://pypi.org/project/typeguard/">typeguard</a> to check these hints.</p>
 <hr class="docutils" />
 <dl class="function">
+<dt id="psml.apply">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">text: str, subject: Optional[shape]</em><span class="sig-paren">)</span> &#x2192; Optional[shape]<a class="headerlink" href="#psml.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>apply an OpenSCAD operation to a shape</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – the text of the OpenSCAD operation</p></li>
+<li><p><strong>subject</strong> – the shape to which the operation is applied</p></li>
+</ul>
+</dd>
+</dl>
+<p>This function applies an OpenSCAD operation to a shape.
+This can be useful for OpenSCAD operations that are not
+otherwise available in the library.</p>
+<p>For convenience, single quotes in the text are replaced by
+double quotes (OpenSCAD uses double quotes).</p>
+<p>Coloring and translation are available in the library,
+but could be done with OpenSCAD functions as shown in the example.</p>
+<div class="figure align-default">
+<a class="reference external image-reference" href="../examples/images/example_apply1_512.png"><img alt="_images/example_apply1_128.png" src="_images/example_apply1_128.png" /></a>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apply</span><span class="p">(</span> <span class="s2">&quot;translate([10,0,0]) color(&#39;red&#39;)&quot;</span><span class="p">,</span> <span class="n">box</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span> <span class="p">)</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="psml.back">
 <code class="sig-prename descclassname">psml.</code><code class="sig-name descname">back</code><span class="sig-paren">(</span><em class="sig-param">v: float</em><span class="sig-paren">)</span> &#x2192; psml.vector<a class="headerlink" href="#psml.back" title="Permalink to this definition">¶</a></dt>
 <dd><p>vector that shifts back (away from you along the y axis) by v</p>
@@ -198,6 +225,51 @@ The default is the global variable number_of_circle_facets.</p>
 <a class="reference external image-reference" href="../examples/images/example_circle2_512.png"><img alt="_images/example_circle2_128.png" src="_images/example_circle2_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="n">facets</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="psml.color">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">color</code><span class="sig-paren">(</span><em class="sig-param">r: Union[float, vector], g: Optional[float] = None, b: Optional[float] = None, alpha: float = 1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>a color in RGB format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> – the r of the vector, or the full color vector</p></li>
+<li><p><strong>g</strong> – (optional) the g of the color</p></li>
+<li><p><strong>b</strong> – (optional) the b of the color</p></li>
+<li><p><strong>alpha</strong> – (optional) the alpha value (opacity)</p></li>
+</ul>
+</dd>
+</dl>
+<p>The color is either specified as a single vector
+parameter, or as separate r, g and b values.
+When a single vector is specified, and alpha value
+(if present) must be named parameter.</p>
+<p>The individual color values must be in the range 0..255.</p>
+<p>An alpha of 0 is full transparency, a value of 1 is a solid color.
+A lower alpha makes the object more faintly colored.
+It does not make it opaque (translucent).</p>
+<p>Colors are visible in OpenSCAD preview, but NOT in after
+rendering. Hence the examples below show previews, unlike
+the other examples, which show the result of rendering.</p>
+<div class="figure align-default">
+<a class="reference external image-reference" href="../examples/images/example_color1_512.png"><img alt="_images/example_color1_128.png" src="_images/example_color1_128.png" /></a>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">color</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
+<span class="n">right</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">color</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mf">0.5</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
+<span class="n">back</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">color</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span> <span class="p">),</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>The color names in the World Wide Web consortium’s SVG color list
+are available, both with PascalCase and in lowercase.</p>
+<div class="figure align-default">
+<a class="reference external image-reference" href="../examples/images/example_color2_512.png"><img alt="_images/example_color2_128.png" src="_images/example_color2_128.png" /></a>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MediumVioletRed</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
+<span class="n">right</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">blue</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
+<span class="n">right</span><span class="p">(</span> <span class="mi">60</span> <span class="p">)</span> <span class="o">**</span> <span class="n">mediumspringgreen</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -375,7 +447,7 @@ Use split() to separate it into a top and a bottom part.
 <p>This manipulator creates the convex hull around its subject,
 which can be 2D or 3D.</p>
 <div class="figure align-default">
-<img alt="_images/example_hull1_128.png" src="_images/example_hull1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_hull1_512.png"><img alt="_images/example_hull1_128.png" src="_images/example_hull1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">15</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span> <span class="p">)</span>
 <span class="n">x</span> <span class="o">+</span> 
@@ -409,6 +481,32 @@ a vector with x set to -v, and y and z to 0.</p>
 <dd><p>a metric (m3 etc.) screw</p>
 </dd></dl>
 
+<dl class="data">
+<dt id="psml.minkowski">
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">minkowski</code><em class="property"> = &lt;psml.modifier object&gt;</em><a class="headerlink" href="#psml.minkowski" title="Permalink to this definition">¶</a></dt>
+<dd><p>minkowski sum</p>
+<p>This modifier computes the Minkowski sum of two or more
+2D or 3D objects. It must be applied to a sum of objects.
+When it is applied to something else (for instance
+the result of applying a modifier) it is a no-op.</p>
+<blockquote>
+<div><div class="figure align-default">
+<a class="reference external image-reference" href="../examples/images/example_minkowski1_512.png"><img alt="_images/example_minkowski1_128.png" src="_images/example_minkowski1_128.png" /></a>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">circle</span><span class="p">(</span> <span class="mi">5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rectangle</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rectangle</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">40</span> <span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="figure align-default">
+<a class="reference external image-reference" href="../examples/images/example_minkowski2_512.png"><img alt="_images/example_minkowski2_128.png" src="_images/example_minkowski2_128.png" /></a>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="n">box</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span> <span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">minkowski</span> <span class="o">**</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
 <dl class="function">
 <dt id="psml.mirror">
 <code class="sig-prename descclassname">psml.</code><code class="sig-name descname">mirror</code><span class="sig-paren">(</span><em class="sig-param">x: Union[float, vector], y: Optional[float] = None, z: Optional[float] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#psml.mirror" title="Permalink to this definition">¶</a></dt>
@@ -430,7 +528,7 @@ parameter, or as separate x, y and z values.</p>
 <p>The example shows a text, the same text mirrored in the
 y-z plane, mirrored in the x-z plane, and mirrored in the x-y plane.</p>
 <div class="figure align-default">
-<img alt="_images/example_mirror1_128.png" src="_images/example_mirror1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_mirror1_512.png"><img alt="_images/example_mirror1_128.png" src="_images/example_mirror1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">extrude</span><span class="p">(</span> <span class="mi">4</span> <span class="p">)</span> <span class="o">**</span> <span class="n">text</span><span class="p">(</span> <span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span>
 <span class="n">x</span> <span class="o">+</span>
@@ -452,9 +550,10 @@ is to be applied.</p>
 <p>The subject can be None instead of a shape,
 in which case the result will also be None.</p>
 <div class="figure align-default">
-<img alt="_images/example_modifier1_128.png" src="_images/example_modifier1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_modifier1_512.png"><img alt="_images/example_modifier1_128.png" src="_images/example_modifier1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">modifier</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">s</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">right10</span> <span class="o">=</span> <span class="n">modifier</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">s</span> <span class="p">)</span>
+<span class="n">right10</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -568,7 +667,7 @@ parameter, or as separate x, y and z values.</p>
 once at its original location,
 and once shifted by the specified vector.</p>
 <div class="figure align-default">
-<img alt="_images/example_repeat2_128.png" src="_images/example_repeat2_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_repeat2_512.png"><img alt="_images/example_repeat2_128.png" src="_images/example_repeat2_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat2</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span>
 </pre></div>
@@ -592,7 +691,7 @@ parameter, or as separate x and y values.</p>
 <p>This manipulator repeats its subject at the
 four corners of the rectangle specified by the parameters.</p>
 <div class="figure align-default">
-<img alt="_images/example_repeat4_128.png" src="_images/example_repeat4_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_repeat4_512.png"><img alt="_images/example_repeat4_128.png" src="_images/example_repeat4_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat4</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span> <span class="p">)</span>
 </pre></div>
@@ -617,7 +716,7 @@ parameter, or as separate x, y and z values.</p>
 <p>This manipulator repeats its subject at the corners
 of the box specified by the parameters.</p>
 <div class="figure align-default">
-<img alt="_images/example_repeat8_128.png" src="_images/example_repeat8_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_repeat8_512.png"><img alt="_images/example_repeat8_128.png" src="_images/example_repeat8_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat8</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">3</span> <span class="p">)</span>
 </pre></div>
@@ -647,7 +746,7 @@ with another non-0 non-None size.</p>
 <p>The example below shows a text, and
 the same text scaled to fit in a 30 by 10 rectangle.</p>
 <div class="figure align-default">
-<img alt="_images/example_resize1_128.png" src="_images/example_resize1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_resize1_512.png"><img alt="_images/example_resize1_128.png" src="_images/example_resize1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span> <span class="s2">&quot;hello world&quot;</span> <span class="p">)</span>
 <span class="n">t</span> <span class="o">+</span> <span class="n">back</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">resize</span><span class="p">(</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">t</span>
@@ -658,7 +757,7 @@ the same sphere scaled to size 40 in the x direction,
 unchanged (size 10) ijn the y direction,
 and z matching the x direction (scaled to 40).</p>
 <div class="figure align-default">
-<img alt="_images/example_resize2_128.png" src="_images/example_resize2_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_resize2_512.png"><img alt="_images/example_resize2_128.png" src="_images/example_resize2_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
 <span class="n">s</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">40</span> <span class="p">)</span> <span class="o">**</span> <span class="n">resize</span><span class="p">(</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span> <span class="p">)</span> <span class="o">**</span> <span class="n">s</span>
@@ -700,7 +799,7 @@ by the specified amount in degrees.</p>
 rotated 45 degrees, first along the x axis, then along
 the y axis, and lastly along the z axis.</p>
 <div class="figure align-default">
-<img alt="_images/example_rotate1_128.png" src="_images/example_rotate1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_rotate1_512.png"><img alt="_images/example_rotate1_128.png" src="_images/example_rotate1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span> <span class="p">)</span>
 <span class="n">m</span> <span class="o">=</span> <span class="p">(</span>
@@ -736,7 +835,7 @@ A factor of 1 retains the original size,
 scaled by 2 in the x direction, scaled by 2 in the y direction,
 and scaled by 2 in the z direction.</p>
 <div class="figure align-default">
-<img alt="_images/example_scale1_128.png" src="_images/example_scale1_128.png" />
+<a class="reference external image-reference" href="../examples/images/example_scale1_512.png"><img alt="_images/example_scale1_128.png" src="_images/example_scale1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">box</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span> <span class="p">)</span>
 <span class="n">m</span> <span class="o">=</span> <span class="p">(</span>

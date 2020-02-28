@@ -95,25 +95,24 @@ Similar libraries:
 -----------------------------------------------------------------------------   
    
 ToDo list
-- dice: handle rounding (shrink text), could be a library element
-- tests for the error handling
+- pdf manual
+- test the error handling
 - pip installer
-- extract example text and put it in the readme.md?
-- longer parameter names
+- check for long parameter names
 - virtual box that can be asked? with wall-thickness?
 - split should be an operator
-- better name for operator / filter -> manipulator
 - move project box to work
 - https://medium.com/@richdayandnight/a-simple-tutorial-on-how-to-document-your-python-project-using-sphinx-and-rinohtype-177c22a15b5b
-- color?
-- multimatrix?
-- minkowski?
-- polyhedron?
-- allow negative extrusion?
+- allow negative extrusion? (= extrusion + mirror?)
 - make _shape_list a nested class?
-- _apply => order of parameters, easier for extern
-- vector init, operators
-- linear extrude versus rotate_extrude (names?)
+- sphinx: vector init, vector operators
+- better name for operator / filter -> manipulator
+- use minkowski for the rounded box? 
+- not in library: - rotate_extrude, multimatrix (affine), polyhedron
+- could an operator simply be a function with one argument?? -> not one None
+- extrude example
+- negative, positive example
+- dice: handle rounding (shrink text), could be a library element
 
 -----------------------------------------------------------------------------      
       

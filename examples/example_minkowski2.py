@@ -6,9 +6,8 @@ install_import_hook('psml')
 
 from psml import *
 
-right10 = modifier( lambda s: s + vector( 0, 0, 10 ) ** s )
+x = sphere( 2 ) + box( 10, 20, 5 )
 
 m = \
-right10 ** sphere( 6 )
-
+x = x + right( 20 ) ** minkowski ** x
 m.write()

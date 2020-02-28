@@ -1,6 +1,9 @@
 
 Each file can be run, it will write to the output.scad file.
 Click on an image to get a larger image.
+[![example_apply1](images/example_apply1_128.png)](images/example_apply1_512.png)
+
+[example_apply1.py](example_apply1.py)
 
 [![example_box1](images/example_box1_128.png)](images/example_box1_512.png)
 
@@ -34,9 +37,25 @@ Click on an image to get a larger image.
 
 [example_facets2.py](example_facets2.py)
 
+[![example_hull1](images/example_hull1_128.png)](images/example_hull1_512.png)
+
+[example_hull1.py](example_hull1.py)
+
+[![example_minkowski1](images/example_minkowski1_128.png)](images/example_minkowski1_512.png)
+
+[example_minkowski1.py](example_minkowski1.py)
+
+[![example_mirror1](images/example_mirror1_128.png)](images/example_mirror1_512.png)
+
+[example_mirror1.py](example_mirror1.py)
+
 [![example_modifier1](images/example_modifier1_128.png)](images/example_modifier1_512.png)
 
 [example_modifier1.py](example_modifier1.py)
+
+[![example_polygon1](images/example_polygon1_128.png)](images/example_polygon1_512.png)
+
+[example_polygon1.py](example_polygon1.py)
 
 [![example_rectangle1](images/example_rectangle1_128.png)](images/example_rectangle1_512.png)
 
@@ -58,9 +77,33 @@ Click on an image to get a larger image.
 
 [example_repeat8.py](example_repeat8.py)
 
+[![example_resize1](images/example_resize1_128.png)](images/example_resize1_512.png)
+
+[example_resize1.py](example_resize1.py)
+
+[![example_resize2](images/example_resize2_128.png)](images/example_resize2_512.png)
+
+[example_resize2.py](example_resize2.py)
+
+[![example_rotate1](images/example_rotate1_128.png)](images/example_rotate1_512.png)
+
+[example_rotate1.py](example_rotate1.py)
+
+[![example_scale1](images/example_scale1_128.png)](images/example_scale1_512.png)
+
+[example_scale1.py](example_scale1.py)
+
 [![example_sphere1](images/example_sphere1_128.png)](images/example_sphere1_512.png)
 
 [example_sphere1.py](example_sphere1.py)
+
+[![example_text1](images/example_text1_128.png)](images/example_text1_512.png)
+
+[example_text1.py](example_text1.py)
+
+[![example_text2](images/example_text2_128.png)](images/example_text2_512.png)
+
+[example_text2.py](example_text2.py)
 
 [![intro_asi](images/intro_asi_128.png)](images/intro_asi_512.png)
 
@@ -69,6 +112,10 @@ Click on an image to get a larger image.
 [![intro_bccs](images/intro_bccs_128.png)](images/intro_bccs_512.png)
 
 [intro_bccs.py](intro_bccs.py)
+
+[![intro_extrude](images/intro_extrude_128.png)](images/intro_extrude_512.png)
+
+[intro_extrude.py](intro_extrude.py)
 
 [![intro_negatives1](images/intro_negatives1_128.png)](images/intro_negatives1_512.png)
 
@@ -82,9 +129,9 @@ Click on an image to get a larger image.
 
 [intro_repeat1.py](intro_repeat1.py)
 
-[![intro_vrmi](images/intro_vrmi_128.png)](images/intro_vrmi_512.png)
+[![intro_vrmsr](images/intro_vrmsr_128.png)](images/intro_vrmsr_512.png)
 
-[intro_vrmi.py](intro_vrmi.py)
+[intro_vrmsr.py](intro_vrmsr.py)
 
 [![readme_snowman](images/readme_snowman_128.png)](images/readme_snowman_512.png)
 

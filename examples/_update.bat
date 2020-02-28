@@ -1,2 +1,2 @@
-c:/python38/python _update.py %*
+c:/python38/python _update.py update %*
 pause
