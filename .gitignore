@@ -1,6 +1,7 @@
 __pycache__
-*.scad
+output.scad
+output.stl
+*.gcode
 .doctrees
-_pull.bat
 _push.bat
 
