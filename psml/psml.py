@@ -823,6 +823,7 @@ def cylinder(
     *,
     radius:    _float_or_none = None,
     diameter:  _float_or_none = None,
+    rounded_top:  bool = False,
     facets:    _float_or_none = None
 ) -> shape:
     """cylinder shape
@@ -831,8 +832,9 @@ def cylinder(
        or a vector that specifies  the height and the radius
     :param radius: the radius of the cylinder
     :param diameter: the diameter of the circle
-    :param facets: number of circle facets
-
+    :param rounded_top: whether the top is rounded (default: not)    
+    :param facets: number of circle facets  
+    
     The size of the cylinder is specified by its the radius
     at its base, and its height.
 
@@ -849,11 +851,18 @@ def cylinder(
     sizes = vector( height, r )
 
     # see remark in circle
-    if facets == None: facets = number_of_circle_facets
-
-    return shape(
-       "cylinder( h=%f, r=%f, $fn=%d );"
-           % ( sizes.x, sizes.y, facets ) )
+    if facets == None: facets = number_of_circle_facets  
+        
+    if rounded_top:
+        return (
+            cylinder( 
+               radius = radius, 
+               height = height - radius, 
+               facets = facets )
+            + up( height - radius ) ** sphere( radius = radius ) )
+    else:
+        return ( "cylinder( h=%f, r=%f, $fn=%d );" 
+            % ( sizes.x, sizes.y, facets ) )
 
 def cone(
    height:     _float_or_vector = None,
