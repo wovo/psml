@@ -8,7 +8,7 @@ from psml import *
 
 m = None
 
-a = down( 10 ) ** cylinder( 5, 20 )
+a = down( 10 ) ** cylinder( radius = 5, height = 20 )
 b = rotate( 90, 0, 0 ) ** a 
 
 m = right( 20 ) ** m + ( a * b )

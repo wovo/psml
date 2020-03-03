@@ -7,6 +7,6 @@ install_import_hook('psml')
 from psml import *
 
 m = \
-repeat8( 10, 20, 8 ) ** sphere( 3 )
+repeat8( 10, 20, 8 ) ** sphere( radius = 3 )
 
 m.write()

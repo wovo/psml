@@ -21,6 +21,14 @@ Click on an image to get a larger image.
 
 [example_circle2.py](example_circle2.py)
 
+[![example_color1](images/example_color1_128.png)](images/example_color1_512.png)
+
+[example_color1.py](example_color1.py)
+
+[![example_color2](images/example_color2_128.png)](images/example_color2_512.png)
+
+[example_color2.py](example_color2.py)
+
 [![example_cone1](images/example_cone1_128.png)](images/example_cone1_512.png)
 
 [example_cone1.py](example_cone1.py)
@@ -44,6 +52,10 @@ Click on an image to get a larger image.
 [![example_minkowski1](images/example_minkowski1_128.png)](images/example_minkowski1_512.png)
 
 [example_minkowski1.py](example_minkowski1.py)
+
+[![example_minkowski2](images/example_minkowski2_128.png)](images/example_minkowski2_512.png)
+
+[example_minkowski2.py](example_minkowski2.py)
 
 [![example_mirror1](images/example_mirror1_128.png)](images/example_mirror1_512.png)
 

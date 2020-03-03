@@ -8,6 +8,6 @@ from psml import *
 
 m = \
 sphere( 10 ) \
-    + ( right( 20 ) ** sphere( 6 ) ) \
-    + ( right( 35 ) ** sphere( 4 ))
+    + ( right( 20 ) ** sphere( radius = 6 ) ) \
+    + ( right( 35 ) ** sphere( radius = 4 ))
 m.write()

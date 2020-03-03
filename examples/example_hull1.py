@@ -8,7 +8,7 @@ from psml import *
 
 m = None
 
-x = sphere( 10 ) + vector( -3, -3, 15 ) ** box( 6, 6, 6 )
+x = sphere( radius = 10 ) + vector( -3, -3, 15 ) ** box( 6, 6, 6 )
 
 m = (\
 x + 

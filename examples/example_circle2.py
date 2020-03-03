@@ -7,5 +7,5 @@ install_import_hook('psml')
 from psml import *
 
 m = \
-circle( 20, facets = 5 )
+circle( radius = 20, facets = 5 )
 m.write()

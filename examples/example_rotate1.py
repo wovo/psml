@@ -6,7 +6,8 @@ install_import_hook('psml')
 
 from psml import *
 
-c = cylinder( 10, 30 ) + vector( -10, -20, 0 ) ** box( 20, 20, 5 )
+c = cylinder( radius = 10, height = 30 ) + vector( -10, -20, 0 ) \
+   ** box( 20, 20, 5 )
 m = (
     c + 
     right(  30 ) ** rotate( 45, 0,  0 ) ** c +

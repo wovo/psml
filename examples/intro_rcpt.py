@@ -14,7 +14,7 @@ p = polygon( [
 
 m = right(  0 ) ** m + back( 4 ) ** text( "psml", 8 )
 m = right( 20 ) ** m + scale( dup3( 5 )) ** p
-m = right( 12 ) ** m + back( 5 ) ** circle( 5 )
+m = right( 12 ) ** m + back( 5 ) ** circle( radius = 5 )
 m = right( 20 ) ** m + rectangle( 10, 20 )
 
 m.write()

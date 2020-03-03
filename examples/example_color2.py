@@ -7,8 +7,8 @@ install_import_hook('psml')
 from psml import *
 
 m = (
-MediumVioletRed ** sphere( 10 ) +
-right( 30 ) ** blue ** sphere( 10 ) +
-right( 60 ) ** mediumspringgreen ** sphere( 10 )
+MediumVioletRed ** sphere( radius = 10 ) +
+right( 30 ) ** blue ** sphere( radius = 10 ) +
+right( 60 ) ** mediumspringgreen ** sphere( radius = 10 )
 )
 m.write()

@@ -8,5 +8,6 @@ from psml import *
 
 facets( 9 )
 m = \
-cylinder( 10, 20 ) + vector( 25, 0, 10 ) ** sphere( 10 )
+cylinder( radius = 10, height = 20 ) \
+   + vector( 25, 0, 10 ) ** sphere( radius = 10 )
 m.write()

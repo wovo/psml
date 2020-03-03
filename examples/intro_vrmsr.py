@@ -9,13 +9,14 @@ from psml import *
 m = None
 
 x = (
-    cylinder( 5, 20 ) +
+    cylinder( radius = 5, height = 20 ) +
     up( 20 ) ** 
     (
-        sphere( 8 ) +
+        sphere( radius = 8 ) +
         vector( -5, -8, 4 ) ** box( 3, 5, 3 ) +
         vector(  2, -8, 4 ) ** box( 5, 5, 3 ) +
-        vector(  0,  0, 3 ) ** rotate( 90, 0, 0 ) ** cylinder( 1, 12 )
+        vector(  0,  0, 3 ) ** rotate( 90, 0, 0 ) 
+           ** cylinder( radius = 1, height = 12 )
     )    
 )    
 

@@ -6,7 +6,7 @@ install_import_hook('psml')
 
 from psml import *
 
-x = sphere( 2 ) + box( 10, 20, 5 )
+x = sphere( radius = 2 ) + box( 10, 20, 5 )
 
 m = \
 x = x + right( 20 ) ** minkowski ** x

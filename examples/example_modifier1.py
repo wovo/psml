@@ -9,6 +9,6 @@ from psml import *
 right10 = modifier( lambda s: s + vector( 0, 0, 10 ) ** s )
 
 m = \
-right10 ** sphere( 6 )
+right10 ** sphere( radius = 6 )
 
 m.write()

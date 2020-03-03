@@ -201,30 +201,32 @@ The default rounding is 0, which yields sharp boundaries.</p>
 
 <dl class="function">
 <dt id="psml.circle">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">circle</code><span class="sig-paren">(</span><em class="sig-param">radius: float</em>, <em class="sig-param">facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.circle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">circle</code><span class="sig-paren">(</span><em class="sig-param">*</em>, <em class="sig-param">radius: Optional[float] = None</em>, <em class="sig-param">diameter: Optional[float] = None</em>, <em class="sig-param">facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.circle" title="Permalink to this definition">¶</a></dt>
 <dd><p>circle shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> – the radius of the circle</p></li>
+<li><p><strong>diameter</strong> – the diameter of the circle</p></li>
 <li><p><strong>facets</strong> – number of circle facets</p></li>
 </ul>
 </dd>
 </dl>
-<p>The size of the circle is specified by its radius.
+<p>The size of the circle is specified by either
+its radius or its diameter.
 The circle is in the x-y plane, with its center at the origin.
 Optionally, the number of circle facets can be specified.
 The default is the global variable number_of_circle_facets.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_circle1_512.png"><img alt="_images/example_circle1_128.png" src="_images/example_circle1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">20</span> <span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_circle2_512.png"><img alt="_images/example_circle2_128.png" src="_images/example_circle2_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="n">facets</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">circle</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">facets</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -257,8 +259,8 @@ the other examples, which show the result of rendering.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_color1_512.png"><img alt="_images/example_color1_128.png" src="_images/example_color1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">color</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
-<span class="n">right</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">color</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mf">0.5</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">color</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
+<span class="n">right</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">color</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mf">0.5</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
 <span class="n">back</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">color</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span> <span class="p">),</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span>
 </pre></div>
 </div>
@@ -267,50 +269,55 @@ are available, both with PascalCase and in lowercase.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_color2_512.png"><img alt="_images/example_color2_128.png" src="_images/example_color2_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MediumVioletRed</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
-<span class="n">right</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">blue</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
-<span class="n">right</span><span class="p">(</span> <span class="mi">60</span> <span class="p">)</span> <span class="o">**</span> <span class="n">mediumspringgreen</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MediumVioletRed</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
+<span class="n">right</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">blue</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span>
+<span class="n">right</span><span class="p">(</span> <span class="mi">60</span> <span class="p">)</span> <span class="o">**</span> <span class="n">mediumspringgreen</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
 <dt id="psml.cone">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cone</code><span class="sig-paren">(</span><em class="sig-param">radius1: Union[float, vector], radius2: Optional[float] = None, height: Optional[float] = None, facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.cone" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cone</code><span class="sig-paren">(</span><em class="sig-param">height: Union[float</em>, <em class="sig-param">vector</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">*</em>, <em class="sig-param">radius1: Optional[float] = None</em>, <em class="sig-param">diameter1: Optional[float] = None</em>, <em class="sig-param">radius2: Optional[float] = None</em>, <em class="sig-param">diameter2: Optional[float] = None</em>, <em class="sig-param">facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.cone" title="Permalink to this definition">¶</a></dt>
 <dd><p>cone shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>radius1</strong> – the radius of the cone at its bottom,
-or a vector that specifies the two radiuses and the height</p></li>
+<li><p><strong>height</strong> – the height of the cone,
+or a vector that specifies the height and the two radiuses</p></li>
+<li><p><strong>radius1</strong> – the radius of the cone at its bottom,</p></li>
 <li><p><strong>radius2</strong> – the radius of the cone at its top</p></li>
-<li><p><strong>height</strong> – the height of the cone</p></li>
+<li><p><strong>diameter1</strong> – the diameter of the cone at its bottom,</p></li>
+<li><p><strong>diameter2</strong> – the diameter of the cone at its top</p></li>
 <li><p><strong>facets</strong> – number of circle facets</p></li>
 </ul>
 </dd>
 </dl>
-<p>The size of the cone is specified by its the radius
-at its base, its radius at its top, and its height.</p>
+<p>The size of the cone is specified by its height,
+its the radius or diameter at its base,
+and its radius or diameter at its top.</p>
 <p>Optionally, the number of circle facets can be specified.
 The default is the global variable number_of_circle_facets.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_cone1_512.png"><img alt="_images/example_cone1_128.png" src="_images/example_cone1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cone</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cone</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span> <span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cone</span><span class="p">(</span> <span class="n">radius1</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">radius2</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">20</span> <span class="p">)</span> \
+   <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cone</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
 <dt id="psml.cylinder">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cylinder</code><span class="sig-paren">(</span><em class="sig-param">radius: Union[float, vector], height: Optional[float] = None, facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.cylinder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">cylinder</code><span class="sig-paren">(</span><em class="sig-param">height: Union[float</em>, <em class="sig-param">vector</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">*</em>, <em class="sig-param">radius: Optional[float] = None</em>, <em class="sig-param">diameter: Optional[float] = None</em>, <em class="sig-param">facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.cylinder" title="Permalink to this definition">¶</a></dt>
 <dd><p>cylinder shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>radius</strong> – the radius of the cylinder,
-or a vector that specifies the radius and the height</p></li>
-<li><p><strong>height</strong> – the height of the cylinder</p></li>
+<li><p><strong>height</strong> – the height of the cylinder,
+or a vector that specifies  the height and the radius</p></li>
+<li><p><strong>radius</strong> – the radius of the cylinder</p></li>
+<li><p><strong>diameter</strong> – the diameter of the circle</p></li>
 <li><p><strong>facets</strong> – number of circle facets</p></li>
 </ul>
 </dd>
@@ -322,7 +329,8 @@ The default is the global variable number_of_circle_facets.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_cylinder1_512.png"><img alt="_images/example_cylinder1_128.png" src="_images/example_cylinder1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">20</span> <span class="p">)</span> \
+   <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -396,14 +404,16 @@ after its call, so better call it before you create any elements.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_facets1_512.png"><img alt="_images/example_facets1_128.png" src="_images/example_facets1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">20</span> <span class="p">)</span> \
+   <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_facets2_512.png"><img alt="_images/example_facets2_128.png" src="_images/example_facets2_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">facets</span><span class="p">(</span> <span class="mi">9</span> <span class="p">)</span>
-<span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+<span class="n">cylinder</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">20</span> <span class="p">)</span> \
+   <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -449,7 +459,7 @@ which can be 2D or 3D.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_hull1_512.png"><img alt="_images/example_hull1_128.png" src="_images/example_hull1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">15</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">15</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span> <span class="p">)</span>
 <span class="n">x</span> <span class="o">+</span> 
 <span class="n">right</span><span class="p">(</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">hull</span> <span class="o">**</span> <span class="n">x</span>
 </pre></div>
@@ -494,14 +504,14 @@ the result of applying a modifier) it is a no-op.</p>
 <div><div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_minkowski1_512.png"><img alt="_images/example_minkowski1_128.png" src="_images/example_minkowski1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">circle</span><span class="p">(</span> <span class="mi">5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rectangle</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rectangle</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">40</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">circle</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rectangle</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">+</span> <span class="n">rectangle</span><span class="p">(</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">40</span> <span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
 </pre></div>
 </div>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_minkowski2_512.png"><img alt="_images/example_minkowski2_128.png" src="_images/example_minkowski2_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="n">box</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">)</span> <span class="o">+</span> <span class="n">box</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span> <span class="p">)</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">minkowski</span> <span class="o">**</span> <span class="n">x</span>
 </pre></div>
 </div>
@@ -555,7 +565,7 @@ in which case the result will also be None.</p>
 <a class="reference external image-reference" href="../examples/images/example_modifier1_512.png"><img alt="_images/example_modifier1_128.png" src="_images/example_modifier1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">right10</span> <span class="o">=</span> <span class="n">modifier</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">s</span> <span class="p">)</span>
-<span class="n">right10</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span>
+<span class="n">right10</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">6</span> <span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -671,7 +681,7 @@ and once shifted by the specified vector.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_repeat2_512.png"><img alt="_images/example_repeat2_128.png" src="_images/example_repeat2_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat2</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat2</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span> <span class="p">)</span> <span class="o">**</span> <span class="n">cylinder</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -720,7 +730,7 @@ of the box specified by the parameters.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_repeat8_512.png"><img alt="_images/example_repeat8_128.png" src="_images/example_repeat8_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat8</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">3</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">repeat8</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">8</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">3</span> <span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -761,7 +771,7 @@ and z matching the x direction (scaled to 40).</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_resize2_512.png"><img alt="_images/example_resize2_128.png" src="_images/example_resize2_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span> <span class="p">)</span>
 <span class="n">s</span> <span class="o">+</span> <span class="n">right</span><span class="p">(</span> <span class="mi">40</span> <span class="p">)</span> <span class="o">**</span> <span class="n">resize</span><span class="p">(</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span> <span class="p">)</span> <span class="o">**</span> <span class="n">s</span>
 </pre></div>
 </div>
@@ -803,7 +813,8 @@ the y axis, and lastly along the z axis.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_rotate1_512.png"><img alt="_images/example_rotate1_128.png" src="_images/example_rotate1_128.png" /></a>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">cylinder</span><span class="p">(</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span> <span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">cylinder</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">30</span> <span class="p">)</span> <span class="o">+</span> <span class="n">vector</span><span class="p">(</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> \
+   <span class="o">**</span> <span class="n">box</span><span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">5</span> <span class="p">)</span>
 <span class="n">m</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">c</span> <span class="o">+</span> 
     <span class="n">right</span><span class="p">(</span>  <span class="mi">30</span> <span class="p">)</span> <span class="o">**</span> <span class="n">rotate</span><span class="p">(</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">0</span> <span class="p">)</span> <span class="o">**</span> <span class="n">c</span> <span class="o">+</span>
@@ -902,25 +913,27 @@ the suffix “.scad” is appended.</p>
 
 <dl class="function">
 <dt id="psml.sphere">
-<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">sphere</code><span class="sig-paren">(</span><em class="sig-param">r: float</em>, <em class="sig-param">facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.sphere" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">psml.</code><code class="sig-name descname">sphere</code><span class="sig-paren">(</span><em class="sig-param">radius: Optional[float] = None</em>, <em class="sig-param">diameter: Optional[float] = None</em>, <em class="sig-param">facets: Optional[float] = None</em><span class="sig-paren">)</span> &#x2192; psml.shape<a class="headerlink" href="#psml.sphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>sphere shape</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> – the radius of the sphere</p></li>
+<li><p><strong>diameter</strong> – the diameter of the sphere</p></li>
 <li><p><strong>facets</strong> – number of sphere facets</p></li>
 </ul>
 </dd>
 </dl>
-<p>The size of the sphere is specified by its radius.</p>
+<p>The size of the sphere is specified by either
+its radius or its diameter.</p>
 <p>Optionally, the number of sphere facets can be specified.
 The default is the global variable number_of_sphere_facets.</p>
 <div class="figure align-default">
 <a class="reference external image-reference" href="../examples/images/example_sphere1_512.png"><img alt="_images/example_sphere1_128.png" src="_images/example_sphere1_128.png" /></a>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sphere</span><span class="p">(</span> <span class="mi">10</span> <span class="p">)</span> \
-    <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">6</span> <span class="p">)</span> <span class="p">)</span> \
-    <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="mi">4</span> <span class="p">))</span>
+    <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">20</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">6</span> <span class="p">)</span> <span class="p">)</span> \
+    <span class="o">+</span> <span class="p">(</span> <span class="n">right</span><span class="p">(</span> <span class="mi">35</span> <span class="p">)</span> <span class="o">**</span> <span class="n">sphere</span><span class="p">(</span> <span class="n">radius</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">))</span>
 </pre></div>
 </div>
 </dd></dl>

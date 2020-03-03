@@ -7,5 +7,6 @@ install_import_hook('psml')
 from psml import *
 
 m = \
-cylinder( 10, 20 ) + right( 35 ) ** cylinder( vector( 20, 10 ))
+cylinder( radius = 10, height = 20 ) \
+   + right( 35 ) ** cylinder( vector( 10, 20 ))
 m.write()
