@@ -816,7 +816,7 @@ def circle(
     r = _radius_from_radius_or_diameter( radius, diameter )
 
     return shape(
-        "circle( r=%f, $fn=%d );" % ( radius, facets ) )
+        "circle( r=%f, $fn=%d );" % ( r, facets ) )
 
 def cylinder(
     height:    _float_or_vector = None,
@@ -849,6 +849,7 @@ def cylinder(
 
     r = _optional_radius_from_radius_or_diameter( radius, diameter )
     sizes = vector( height, r )
+    height, radius = sizes.x, sizes.y
 
     # see remark in circle
     if facets == None: facets = number_of_circle_facets  
@@ -856,13 +857,13 @@ def cylinder(
     if rounded_top:
         return (
             cylinder( 
-               radius = radius, 
                height = height - radius, 
+               radius = radius, 
                facets = facets )
             + up( height - radius ) ** sphere( radius = radius ) )
     else:
-        return ( "cylinder( h=%f, r=%f, $fn=%d );" 
-            % ( sizes.x, sizes.y, facets ) )
+        return shape( "cylinder( h=%f, r=%f, $fn=%d );" 
+            % ( height, radius, facets ) )
 
 def cone(
    height:     _float_or_vector = None,

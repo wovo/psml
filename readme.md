@@ -114,6 +114,7 @@ ToDo list
 - negative, positive example
 - dice: handle rounding (shrink text), could be a library element
 - cleanup diameter/radius, balanced examples
+- allow box( v2, n ) ?
 
 -----------------------------------------------------------------------------      
       
