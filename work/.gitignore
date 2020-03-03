@@ -1,6 +1,5 @@
 __pycache__
 *.scad
 .doctrees
-_pull.bat
 _push.bat
 
