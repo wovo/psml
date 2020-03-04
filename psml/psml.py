@@ -1229,8 +1229,8 @@ def resize(
     This manipulator resizes its subject to the sizes
     indicated for the x, y and z direction.
     A size of 0 keeps the size (in that direction) unchanged.
-    A size of None scales the size in that direction
-    with another non-0 non-None size.
+    A negative size scales that size in that direction
+       in proportion with another non-0 non-None size.
 
     The example below shows a text, and
     the same text scaled to fit in a 30 by 10 rectangle.
@@ -1507,7 +1507,7 @@ def hollow_box( size : vector, walls, rounding = 0 ) -> shape:
     (Or use project_enclosure() which does these things for you.)
     """
     return (
-        box( size, rounding )
+        box( size, rounding = rounding )
         - vector( dup3( walls )) ** box( size - 2 * dup3( walls )))
 
 def screw_and_nut_column(

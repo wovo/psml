@@ -55,31 +55,51 @@ class pcb_four:
       self.height = height
       self.m = m
       
-      peg = support_peg( self.height, m )
+      peg = support_screw( self.height, m )
       self.shape = (
           box( size.x, size.y, 1 ) 
           + corner_hole ** up( 1 ) ** repeat4( self.hole_square ) ** peg.shape )
             
    
 
-pcb_s3 = pcb_four(
-   size = vector( 78, 83 ),
-   corner_hole = vector( 3, 5 ),
-   hole_square = vector( 72, 73 ) )   
+def pcb_s3( dist = 6 ):
+
+    dist = 10
+
+    return (
+        pcb_four(
+            size = vector( 78.5, 83 ),
+            corner_hole = vector( 3.25, 5 ),
+            hole_square = vector( 72, 75 ), 
+            height = dist ).shape   
+            
+        + up( dist ) ** negative ** (
+        
+            # room for the shrouded 10 pin connector
+            vector( 21, -3, 2 ) ** box( 18, 4, 8 )    
+    
+            # room for the power connector
+            + vector( 55, -3, 2 ) ** box( 8, 2, 12 ) 
+    
+            # room for the screw connector
+            + vector( 20, 83, 2 ) ** box( 32, 4, 16 ) 
+        )    
+    )   
    
-   
-
-def bus( d, h, w = 2 ):
-   return cylinder( d + w, h ) - cylinder( d, h )
-
-#x = \
-#   ( extrude( w ) ** rectangle( pcb + 2 * dup2( m + w ), rounding = 2 ) ) + \
-#   ( dup2( w + m ) + vector( 4, 3 ) ) ** repeat4( 71.5, 73.5 ) ** bus( 2, 8 )
-   
-pcb_s3.shape.write()   
-
-
-
-
-
+def box_s3():
+    w = 1
+    org = vector( w, w, w ) + vector( 1, 1, 0 )
+    return (
+       hollow_box( 2 * org + vector( 80, 85, 40 ), w, 1 )
+       + org ** pcb_s3()
+    )
       
+
+s = split_box( box_s3(), vector( 85, 90, 45 ), 15 )
+
+sz = vector( 10, 20, 5 )
+s = split_box( box( sz ), sz, 2 )
+   
+s.write()   
+
+
