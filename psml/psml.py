@@ -120,6 +120,7 @@ The examples use typeguard_ to check these hints.
 
 from __future__ import annotations
 from typing import Union, Tuple, Iterable
+import subprocess
 
 # specifiers used in the type annotations
 _shape_or_shape_list  = Union[ "shape", "_shape_list" ]
@@ -307,7 +308,7 @@ class shape:
         """
         return ( self - shape( self._negative(), "" ))._positive()
 
-    def write( self, file_name = "output.scad" ):
+    def write( self, file_name = "output" ):
         """write the shape to the specified file
 
         :param file_name: name of the file
@@ -328,10 +329,88 @@ class shape:
             sphere( 10 ).write( "output.scad" )
         """
 
-        if not "." in file_name: file_name = file_name+ ".scad"
+        if not "." in file_name: 
+            file_name = file_name+ ".scad"
+            
         f = open( file_name, "w" )
         f.write( str( self ) )
         f.close()
+        
+    def stl( self, file_name = "output" ):
+        """write the stl to the specified file
+
+        :param file_name: name of the file
+
+        This function uses OpenSCAD to render, and then 
+        export the stl representation to the specified 
+        file (default: output.stl).
+
+        If the file_name does not en in ".stl" 
+        that suffix is appended.
+        
+        A temporary file _output.scad will be created
+        which is the input for OpenSCAD.
+        
+        NOTE: the path to openscad is now 
+
+        .. code-block::
+
+            # these lines have the same effect
+            sphere( 10 ).stl()
+            sphere( 10 ).stl( "output" )
+            sphere( 10 ).stl( "output.stl" )
+        """
+        
+        if not file_name.endswith( ".stl" ): 
+            file_name = file_name+ ".stl"
+        
+        self.write( "_output.scad" )
+        
+        openscad = "C:/Program Files/OpenSCAD/OpenSCAD"
+        s = subprocess.run( [ 
+            openscad, 
+            "_output.scad", 
+            "-o", file_name ])        
+
+    def gcode( self, file_name = "output" ):
+        """write the gcode to the specified file
+        
+        THIS DOESN NOT WORK (YET)?
+        Running cura from a command line seems to be a dark art.
+
+        :param file_name: name of the file
+
+        This function uses OpenSCAD to render, and then 
+        Cura to slice the design to the specified 
+        file (default: output.gcode).
+
+        If the file_name does not en in ".stl" 
+        that suffix is appended.
+        
+        A temporary file _output.scad will be created
+        which is the input for OpenSCAD.
+        
+        NOTE: the path to openscad is now 
+
+        .. code-block::
+
+            # these lines have the same effect
+            sphere( 10 ).gcode()
+            sphere( 10 ).gcode( "output" )
+            sphere( 10 ).gcode( "output.gcode" )
+        """
+        
+        if not "." in file_name: 
+            file_name = file_name+ ".gcode"
+        
+        self.stl( "_output.stl" )
+        
+        cura = "C:/Program Files/Ultimaker Cura 4.4/CuraEngine"
+        s = subprocess.run( [ 
+            cura, 
+            "slice"
+            " -o", file_name,       
+            " -l", "_output.scad" ] )
 
     def __add__( self, rhs: _shape_or_none ) -> shape:
         """add two shapes

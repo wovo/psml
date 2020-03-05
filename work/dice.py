@@ -8,6 +8,7 @@
 # engrave depth as dice parameter
 # dice6
 # within modifier? scales?
+# no-border seems to work the wrong way round: the text gets smaller
 
 import sys
 sys.path.append( "../psml" )
@@ -58,7 +59,6 @@ def dice( size, text, rounding = 0 ):
     ts2 = dup2( ts )
     return (
         box( dup3( size ), rounding = rounding )
-        + box( dup3( 1 ))
         - vector( size - shift, shift, 0 ) ** mirror( 1, 0, 0 ) 
             ** formatted_text( text[ 0 ], ts2 )
         - vector( size - shift, size - 1 , shift ) ** rotate( 90, 0, 180 ) 
@@ -75,7 +75,8 @@ def dice( size, text, rounding = 0 ):
         
 s = dice( 
     size = 35, 
-    text = [ "TI", "AI", "BIM", "Open\nICT", "SD", "CnC" ],
-    rounding = 2 )
+    text = [ "TI", "AI", "BIM", "Open\nICT", "SD", "CSC" ],
+    rounding = 1 )
 # s = formatted_text( "Open\nICT", dup2( 20 ))
-s.write()   
+# s = box( 10, 20, 5 )
+s.stl( "dobbelsteen-35" )   
