@@ -120,6 +120,7 @@ The examples use typeguard_ to check these hints.
 
 from __future__ import annotations
 from typing import Union, Tuple, Iterable
+import os.path
 import subprocess
 
 # specifiers used in the type annotations
@@ -255,6 +256,12 @@ def apply(
 #
 #============================================================================
 
+def _select_existing_file( list, default ):
+   for file in list:
+      if os.path.isfile( file ):
+         return file
+   return default      
+
 class shape:
     """2D or 3D shape
 
@@ -366,11 +373,15 @@ class shape:
         
         self.write( "_output.scad" )
         
-        openscad = "C:/Program Files/OpenSCAD/OpenSCAD"
+        openscad = _select_existing_file( [
+           "C:/Program Files (x86)/OpenSCAD/OpenSCAD.exe",
+           "C:/Program Files/OpenSCAD/OpenSCAD.exe",
+        ], "openscad" )   
+        
         s = subprocess.run( [ 
             openscad, 
             "_output.scad", 
-            "-o", file_name ])        
+            "-o", file_name ] )        
 
     def gcode( self, file_name = "output" ):
         """write the gcode to the specified file

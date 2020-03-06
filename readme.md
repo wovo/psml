@@ -115,6 +115,7 @@ ToDo list
 - dice: handle rounding (shrink text), could be a library element
 - cleanup diameter/radius, balanced examples
 - allow box( v2, n ) ?
+- output image, sumpply extra parameters
 
 -----------------------------------------------------------------------------      
       

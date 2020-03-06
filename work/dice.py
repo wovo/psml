@@ -15,10 +15,64 @@ sys.path.append( "../psml" )
 
 from psml import *
 
-def frame( size, width = 1, rounding = 0, outer_rounting = 0, inner_rounding = 0 ):
-   return (
-      rectangle( size ) 
-      - dup2( width ) ** rectangle( size - 2 * dup2( width ) ) )      
+def _select_not_none( list, default ):
+   for x in list:
+      if x != None:
+          return x
+   return default       
+
+def frame( 
+   size : vector, 
+   width: float = 1, 
+   rounding  = 0
+) -> shape:
+    """a 2D or 3D frame
+    
+    This function returns a 2D or 3D frame.
+    
+    A 2D frame can have have sharp or rounded corners.
+    The rounding can be specified separately 
+    for the inside and the outside.
+    
+    A 3D frame can have either square or circular bars.
+    """
+    
+    if size.z == None:
+    
+        # 2D frame
+        if isinstance( rounding, vector ):
+            outer_rounding, inner_rounding = rounding.x, rounding.y
+        else:     
+            outer_rounding, inner_rounding = rounding, rounding
+        
+        return (
+            rectangle( 
+                size, 
+                rounding = outer_rounding ) 
+            - dup2( width ) ** rectangle( 
+                size - 2 * dup2( width ),
+                rounding = inner_rounding ) )
+    
+    else:
+    
+        # 3D frame
+        if rounding:
+            corner = sphere( diameter = width )
+            bar_x = cylinder( diameter = width +2 , height = size.x - width )
+            bar_y = cylinder( diameter = width +2 , height = size.y - width )
+            bar_z = cylinder( diameter = width +2, height = size.z - width )
+        else:
+           corner = vector( dup3( - width / 2.0 ) ) ** box( dup3( width ))
+           bar_x = dup2( - width / 2.0 ) ** box( width, width, size.x - width )
+           bar_y = dup2( - width / 2.0 ) ** box( width, width, size.y - width )
+           bar_z = dup2( - width / 2.0 ) ** box( width, width, size.z - width )
+        return (
+            repeat8( size - dup3( width ) ) ** corner
+            + rotate( 0, 90, 0 ) ** repeat4( - size.z + width, size.y - width,  ) ** bar_x
+            + rotate( -90, 0, 0 ) ** repeat4( size.x - width, - size.z + width,  ) ** bar_y
+            + repeat4( size.x - width, size.y - width ) ** bar_z
+        )    
+
 
 def formatted_text( txt, size, margin = 3, fr = 1, height = 1 ):
 
@@ -77,6 +131,10 @@ s = dice(
     size = 35, 
     text = [ "TI", "AI", "BIM", "Open\nICT", "SD", "CSC" ],
     rounding = 1 )
-# s = formatted_text( "Open\nICT", dup2( 20 ))
+s = formatted_text( "Open\nICT", dup2( 20 ))
 # s = box( 10, 20, 5 )
-s.stl( "dobbelsteen-35" )   
+# s.stl( "dobbelsteen-35" )   
+
+s = frame( vector( 10, 20, 30 ), 4, 1 )
+ 
+s.write()
