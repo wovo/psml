@@ -1583,6 +1583,8 @@ m3_10 = m_screw( 3, 10 )
 m3_12 = m_screw( 3, 12 )
 m3_15 = m_screw( 3, 15 )
 m3_20 = m_screw( 3, 20 )
+m3_30 = m_screw( 3, 30 )
+m3_40 = m_screw( 3, 40 )
 
 def hollow_box( size : vector, walls, rounding = 0 ) -> shape:
     """a hollow box
@@ -1644,24 +1646,49 @@ def screw_and_nut_column(
     nh = h - sh - s + m
 
     r = None
+    ch = 1
 
     # recess for the crew head
-    r += up( h ) ** rotate( 180, 0, 0 )  ** ( cylinder( w + m, sh + w ) - \
-        negative ** cylinder( m, sh ))
+    r += ( 
+        up( h ) ** rotate( 180, 0, 0 ) 
+            ** ( cylinder( radius = w + m, height = sh + w )
+        - negative ** cylinder( radius = m, height = sh ) ) )
+
+    # recess cone
+    r += up( h - w ) ** cone( 
+        radius1 = w + m, 
+        radius2 = w + m + ch,
+        height  = ch )    
 
     # support cone
-    r += up( h - sh - w - m ) ** cylinder( m / 2 + w, m, r2 = m + w )
+    r += up( h - sh - w - m ) ** cone( 
+        radius1 = m / 2 + w, 
+        radius2 = m + w, 
+        height  = m )
 
     # cylinder for the screw shaft
-    r += cylinder( w + m / 2, h ) - \
-        negative ** cylinder( m / 2, h )
+    r += ( cylinder( radius = w + m / 2, height = h )
+        - negative ** cylinder( radius = m / 2, height = h ) )
 
     # recess for the hex nut
-    r+= cylinder( w + m, nh + w ) - \
-        negative ** cylinder( m, nh, f = 6 )
+    r+= (
+        cylinder( radius = w + m, height = nh + w )
+        - negative ** cylinder( 
+            radius = m, 
+            height  = nh, 
+            facets = 6 ) )
+
+    # recess cone
+    r += up( w ) ** cone( 
+        radius1 = w + m + ch, 
+        radius2 = w + m,
+        height  = ch )    
 
     # support cone
-    r += up( nh + w ) ** cylinder( m + w, m, r2 = m / 2 + w )
+    r += up( nh + w ) ** cone( 
+        radius1 = m + w, 
+        radius2 = m / 2 + w,
+        height  = m )
 
     return r
 
@@ -1691,11 +1718,11 @@ def split_box( b, s, h, d = vector( 5, 0 ) ):
     if 0: r = b
 
     # bottom part
-    r = ( vector( s.x + 5, 0, 0 ) ** r ) + \
+    if 1: r = ( vector( s.x + 5, 0, 0 ) ** r ) + \
         ( b - ( vector( 0, 0, h ) ** box( s )))
 
     # top part
-    r = ( vector( s.x + 5, 0, 0 ) ** r ) + \
+    if 1: r = ( vector( s.x + 5, 0, 0 ) ** r ) + \
         vector( s.x, 0, s.z ) ** rotate( 0, 180, 0 ) ** \
            ( b - box( s.x, s.y, h ))
 
@@ -1712,8 +1739,6 @@ def project_enclosure( size, walls, rounding = 0 ):
     """
 
     b = hollow_box( size, walls, rounding )
-
-
 
     return b
 
