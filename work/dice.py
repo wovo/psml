@@ -128,13 +128,13 @@ def dice( size, text, rounding = 0 ):
     )      
         
 s = dice( 
-    size = 35, 
+    size = 22, 
     text = [ "TI", "AI", "BIM", "Open\nICT", "SD", "CSC" ],
     rounding = 1 )
-s = formatted_text( "Open\nICT", dup2( 20 ))
+#s = formatted_text( "Open\nICT", dup2( 20 ))
 # s = box( 10, 20, 5 )
 # s.stl( "dobbelsteen-35" )   
 
-s = frame( vector( 10, 20, 30 ), 4, 1 )
+#s = frame( vector( 10, 20, 30 ), 4, 1 )
  
 s.write()

@@ -1187,6 +1187,20 @@ def extrude(
         lambda subject : apply(
             "linear_extrude( height=%f, twist=%f, scale=%f, $fn=%d )\n"
                 % ( height, twist, scale, facets ), subject ) )
+                
+def rotate_extrude(
+    angle: float = 360, 
+    convexity: int = 2,
+    facets: int = None
+):              
+
+    # see remark in circle
+    if facets == None: facets = number_of_extrude_facets
+    
+    return modifier(
+        lambda subject : apply(
+            "rotate_extrude( angle=%f, convexity=%d, $fn=%d )\n"
+                % ( angle, convexity, facets ), subject ) )    
 
 def mirror(
     x: _float_or_vector,
@@ -1566,7 +1580,7 @@ def color(
 
 #============================================================================
 #
-# project enclosure
+# screw-and-nut column
 #
 #============================================================================
 
@@ -1586,22 +1600,6 @@ m3_20 = m_screw( 3, 20 )
 m3_30 = m_screw( 3, 30 )
 m3_40 = m_screw( 3, 40 )
 
-def hollow_box( size : vector, walls, rounding = 0 ) -> shape:
-    """a hollow box
-
-    :param size: size of the box (x, y, z )
-    :param walls: wall thickness
-    :param rounding: rounding diameter (default: no rounding)
-
-    This is a hollow project enclosure box,
-    Use screw_and_nut_column() to place screw holes and recesses.
-    Use split() to separate it into a top and a bottom part.
-    (Or use project_enclosure() which does these things for you.)
-    """
-    return (
-        box( size, rounding = rounding )
-        - vector( dup3( walls )) ** box( size - 2 * dup3( walls )))
-
 def screw_and_nut_column(
    height,
    screw : m_screw,
@@ -1610,12 +1608,12 @@ def screw_and_nut_column(
     """a screw and nut column
 
     :param height: height of the column
-    :param srew: screw (specifies diameter and thread lenghth)
+    :param srew: screw (specifies diameter and thread length)
     :param wall: wall thickness (default 1mm)
 
     This is a vertical screw-and-nut column for keeping two parts
     of an enclosure together with a flat screw and a hex nut.
-    It is assumed to be spliced into the top and bottom parts.
+    It is assumed to be split into the top and bottom parts.
     """
 
     h = height
@@ -1692,6 +1690,41 @@ def screw_and_nut_column(
 
     return r
 
+    
+#============================================================================
+#
+# hollow (project) box
+#
+#============================================================================
+
+def hollow_box( 
+    size : vector, 
+    walls = 1, 
+    rounding = 0 
+) -> shape:
+    """a hollow box
+
+    :param size: outer size of the box (x, y, z )
+    :param walls: wall thickness
+    :param rounding: outer rounding diameter (default: no rounding)
+
+    This is a hollow project enclosure box,
+    Use screw_and_nut_column() to place screw holes and recesses.
+    
+    Use split() to separate it into a top and a bottom part.
+    (Or use project_enclosure() which does these things for you.)
+    """
+    return (
+        box( size, rounding = rounding )
+        - vector( dup3( walls )) ** box( size - 2 * dup3( walls )))
+
+
+#============================================================================
+#
+# split a box into bottom and/or top parts
+#
+#============================================================================
+
 def split_box( b, s, h, d = vector( 5, 0 ) ):
     """split an enclosure in top and bottom parts
 
@@ -1699,7 +1732,7 @@ def split_box( b, s, h, d = vector( 5, 0 ) ):
     which are placed next to each other
     (default: 5 mm apart in x direction).
 
-    :param b: the box to splice
+    :param b: the box to split
     :param s: the size of the box
     :param h: height at which the box is spliced
     :param d: distance between the parts

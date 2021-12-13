@@ -83,6 +83,8 @@ My workflow is
    - run it (I prefer the command line)
    - have OpenSCAD with the result file open, 
      enable Design => Automatic Reload and Preview.
+   - when OK, export from OpenSCAD to stl
+   - I use Cura to do the slicing for our Ultimaker 3 printer
    
 This library is very much work-in-progress. 
 Feedback is welcome,
@@ -115,7 +117,8 @@ ToDo list
 - dice: handle rounding (shrink text), could be a library element
 - cleanup diameter/radius, balanced examples
 - allow box( v2, n ) ?
-- output image, sumpply extra parameters
+- output image, sumply extra parameters
+- recessed option for the screw column
 
 -----------------------------------------------------------------------------      
       
